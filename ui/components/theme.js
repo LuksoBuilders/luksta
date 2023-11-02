@@ -36,6 +36,7 @@ const theme = createTheme({
       default: "#F7F8FC",
       paper: "#FFFFFF",
       secondary: "#443569",
+      input: "#E9EBF5",
     },
     error: {
       main: "#F2305E",

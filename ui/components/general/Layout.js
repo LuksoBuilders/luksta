@@ -15,6 +15,11 @@ const Layout = ({ children }) => {
         `}
       ></div>
       <Container>{children}</Container>
+      <div
+        css={css`
+          margin-top: 2em;
+        `}
+      ></div>
     </div>
   );
 };

@@ -21,8 +21,6 @@ const AvatarSelector = () => {
   const avatar = projectData.details.avatar;
   const setAvatar = projectActions.details.setAvatar;
 
-  console.log(avatar);
-
   return (
     <div>
       <Typography

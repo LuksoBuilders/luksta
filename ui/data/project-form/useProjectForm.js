@@ -11,6 +11,15 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
   const [draftKey, setDraftKey] = useState("");
   const [title, setTitle] = useState("");
   const [avatar, setAvatar] = useState(null);
+  const [pictures, setPictures] = useState([]);
+
+  const addPicture = (pics) => {
+    setPictures([...pictures, ...pics].slice(0, 8));
+  };
+
+  const removePicture = (index) => {
+    setPictures(pictures.filter((pic, i) => index !== i));
+  };
 
   useEffect(() => {
     const initiateDrafting = async () => {
@@ -44,6 +53,8 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     details: {
       setTitle,
       setAvatar,
+      addPicture,
+      removePicture,
     },
   };
 
@@ -51,6 +62,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     details: {
       title,
       avatar,
+      pictures,
     },
   };
 
