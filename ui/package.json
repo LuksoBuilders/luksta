@@ -12,10 +12,15 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
+    "@lukso/web3-onboard-config": "^1.0.3",
     "@mui/material": "^5.14.16",
+    "@web3-onboard/core": "^2.21.2",
+    "@web3-onboard/injected-wallets": "^2.10.8",
+    "ethers": "5",
     "next": "14.0.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "eslint": "8.52.0",

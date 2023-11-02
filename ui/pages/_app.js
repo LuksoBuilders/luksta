@@ -1,11 +1,16 @@
-import "../styles/globals.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "../components/theme";
+import { ExtentionProvider } from "../data/universal-hooks";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <ExtentionProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </ExtentionProvider>
+  );
 }
 
 export default MyApp;
