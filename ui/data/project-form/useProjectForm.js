@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import localforage from "localforage";
 
 export const ProjectFormContext = createContext();
 
@@ -6,8 +7,28 @@ export const useProjectForm = () => {
   return useContext(ProjectFormContext);
 };
 
-export const ProjectFormProvider = ({ children, initialData }) => {
+export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
+  const [draftKey, setDraftKey] = useState("");
   const [title, setTitle] = useState("");
+  const [avatar, setAvatar] = useState(null);
+
+  useEffect(() => {
+    const initiateDrafting = async () => {
+      if (draftingKey) {
+        setDraftKey(draftingKey);
+      } else {
+        setDraftKey(`DraftKey:${Math.floor(Math.random() * 100000000)}`);
+        const drafts = await localforage.getItem(`UserProjectDrafts`);
+        if (drafts && draftKey) {
+          localforage.setItem(`UserProjectDrafts`, [...drafts, draftKey]);
+        } else {
+          localforage.setItem(`UserProjectDrafts`, [draftKey]);
+        }
+      }
+    };
+
+    initiateDrafting();
+  }, []);
 
   useEffect(() => {
     if (initialData) {
@@ -19,17 +40,35 @@ export const ProjectFormProvider = ({ children, initialData }) => {
     }
   }, [initialData]);
 
+  const projectActions = {
+    details: {
+      setTitle,
+      setAvatar,
+    },
+  };
+
   const projectData = {
     details: {
       title,
-      setTitle,
+      avatar,
     },
   };
+
+  useEffect(() => {
+    const saveDraft = async () => {
+      await localforage.setItem(draftKey, projectData);
+      1;
+    };
+
+    saveDraft();
+  }, [projectData]);
 
   const submitted = false;
 
   return (
-    <ProjectFormContext.Provider value={{ projectData, submitted }}>
+    <ProjectFormContext.Provider
+      value={{ projectData, projectActions, submitted }}
+    >
       {children}
     </ProjectFormContext.Provider>
   );
