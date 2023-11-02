@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import { ButtonBase, Typography, Avatar, Button } from "@mui/material";
 import { Container, Row, Col } from "react-grid-system";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import { useExtention } from "../../data/universal-hooks";
 
@@ -11,6 +12,10 @@ import ProfileWidget from "./ProfileWidget";
 
 const Header = () => {
   const { isConnected, connectedAccount, connect } = useExtention();
+
+  const router = useRouter();
+
+  console.log(router);
 
   return (
     <Container>
@@ -72,6 +77,9 @@ const Header = () => {
                   border-width: 2px !important;
                 `}
                 variant="outlined"
+                onClick={() => {
+                  router.push(`/projects/create`);
+                }}
               >
                 Create Project
               </Button>
