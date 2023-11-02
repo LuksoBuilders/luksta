@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
+import { DataProvider } from "./useData";
 
 const ExtentionContext = createContext();
 
@@ -11,6 +12,8 @@ export const ExtentionProvider = ({ children }) => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [accounts, setAccounts] = useState([]);
+
+  const connectedAccount = accounts[0];
 
   const getAccounts = async (provider) => {
     setAccounts(await provider.send("eth_accounts", []));
@@ -44,13 +47,13 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
-  const isConnected = accounts.length > 0;
+  const isConnected = !!connectedAccount;
 
   return (
     <ExtentionContext.Provider
-      value={{ provider, signer, connect, accounts, isConnected }}
+      value={{ provider, signer, connect, connectedAccount, isConnected }}
     >
-      {children}
+      <DataProvider provider={provider}>{children}</DataProvider>
     </ExtentionContext.Provider>
   );
 };

@@ -11,6 +11,7 @@ const theme = createTheme({
   },
   palette: {
     mode: "light",
+    text: { primary: "#141A38", secondary: "#606787" },
     primary: {
       main: "#8A9FF8",
       light: "#DBE2FF",
@@ -45,7 +46,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 10,
-          boxShadow: "rgb(20 21 33 / 18%) 0px 2px 10px 0px",
+          boxShadow: "rgb(20 21 33 / 10%) 2px 2px 15px 0px",
         },
       },
     },
