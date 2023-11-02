@@ -3,6 +3,7 @@
 import { css } from "@emotion/react";
 import { ButtonBase, Typography, Avatar, Button } from "@mui/material";
 import { Container, Row, Col } from "react-grid-system";
+import Image from "next/image";
 
 import { useExtention } from "../../data/universal-hooks";
 
@@ -22,8 +23,58 @@ const Header = () => {
               padding: 1em 0em;
             `}
           >
-            <div css={css``}>Left Panel</div>
-            <div css={css``}>
+            <div
+              css={css`
+                display: flex;
+                align-items: center;
+              `}
+            >
+              <Image
+                src="/Luksta-logo.png"
+                width={88}
+                height={40}
+                alt="Picture of the author"
+              />
+              <Button
+                css={css`
+                  margin-right: 0.5em;
+                  margin-left: 1.5em;
+                `}
+              >
+                Home
+              </Button>
+              <Button
+                css={css`
+                  margin-right: 0.5em;
+                `}
+              >
+                Projects
+              </Button>
+              <Button
+                css={css`
+                  margin-right: 0.5em;
+                `}
+              >
+                About
+              </Button>
+            </div>
+            <div>
+              <Button
+                css={css`
+                  margin-right: 0.5em;
+                `}
+              >
+                Dashboard
+              </Button>
+              <Button
+                css={css`
+                  margin-right: 0.5em;
+                  border-width: 2px !important;
+                `}
+                variant="outlined"
+              >
+                Create Project
+              </Button>
               {isConnected ? (
                 <ProfileWidget address={connectedAccount} />
               ) : (
@@ -31,6 +82,8 @@ const Header = () => {
                   onClick={async () => {
                     connect();
                   }}
+                  variant="contained"
+                  color="secondary"
                 >
                   Connect
                 </Button>

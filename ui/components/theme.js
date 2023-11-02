@@ -17,12 +17,12 @@ const theme = createTheme({
       light: "#DBE2FF",
       dark: "#485BA8",
     },
-    secondary: {
+    accentOne: {
       main: "#96EBA4",
       light: "#E3FFE8",
       dark: "#60B56E",
     },
-    accentOne: {
+    secondary: {
       main: "#E9335E",
       light: "#FF8FA9",
       dark: "#A31D3D",
