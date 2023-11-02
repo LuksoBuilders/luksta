@@ -21,9 +21,11 @@ export const ExtentionProvider = ({ children }) => {
 
   useEffect(() => {
     const connectProvider = async () => {
-      const web3Provider = new ethers.providers.Web3Provider(
-        window.ethereum ? window.ethereum : "https://rpc.testnet.lukso.network"
-      );
+      const web3Provider = window.ethereum
+        ? new ethers.providers.Web3Provider(window.ethereum)
+        : new ethers.providers.JsonRpcProvider(
+            "https://rpc.testnet.lukso.network"
+          );
       setProvider(web3Provider);
       getAccounts(web3Provider);
     };

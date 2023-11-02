@@ -15,8 +15,6 @@ const Header = () => {
 
   const router = useRouter();
 
-  console.log(router);
-
   return (
     <Container>
       <Row>

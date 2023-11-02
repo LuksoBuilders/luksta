@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
       <Header />
       <div
         css={css`
-          margin-top: 1em;
+          margin-top: 2em;
         `}
       ></div>
       <Container>{children}</Container>
