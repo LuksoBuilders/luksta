@@ -24,6 +24,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-grid-system": "^8.1.9",
+    "react-icons": "^4.11.0",
     "rxjs": "^7.8.1",
     "web3": "^4.2.1"
   },

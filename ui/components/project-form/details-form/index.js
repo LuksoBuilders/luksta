@@ -7,6 +7,7 @@ import TitleInput from "./TitleInput";
 import AvatarSelector from "./AvatarSelector";
 import PictureSelector from "./PictureSelector";
 import ProjectDescription from "./ProjectDescription";
+import ProjectSocials from "./ProjectSocials";
 
 const DetailsForm = () => {
   return (
@@ -30,6 +31,12 @@ const DetailsForm = () => {
         `}
       />
       <ProjectDescription />
+      <div
+        css={css`
+          margin-top: 2em;
+        `}
+      />
+      <ProjectSocials />
     </div>
   );
 };

@@ -13,6 +13,20 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
   const [avatar, setAvatar] = useState(null);
   const [pictures, setPictures] = useState([]);
   const [description, setDescription] = useState([]);
+  const [links, setLinks] = useState({
+    website: "",
+    whitepaper: "",
+    discord: "",
+    telegram: "",
+    twitter: "",
+    github: "",
+  });
+
+  const setLink = (key, value) => {
+    const nLinks = { ...links };
+    nLinks[key] = value;
+    setLinks(nLinks);
+  };
 
   const addPicture = (pics) => {
     setPictures([...pictures, ...pics].slice(0, 8));
@@ -57,6 +71,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       addPicture,
       removePicture,
       setDescription,
+      setLink,
     },
   };
 
@@ -66,6 +81,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       avatar,
       pictures,
       description,
+      links,
     },
   };
 
