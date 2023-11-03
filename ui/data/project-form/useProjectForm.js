@@ -12,6 +12,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
   const [title, setTitle] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [pictures, setPictures] = useState([]);
+  const [description, setDescription] = useState([]);
 
   const addPicture = (pics) => {
     setPictures([...pictures, ...pics].slice(0, 8));
@@ -55,6 +56,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       setAvatar,
       addPicture,
       removePicture,
+      setDescription,
     },
   };
 
@@ -63,6 +65,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       title,
       avatar,
       pictures,
+      description,
     },
   };
 

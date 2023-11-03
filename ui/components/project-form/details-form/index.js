@@ -6,6 +6,7 @@ import { ButtonBase, Typography, Avatar } from "@mui/material";
 import TitleInput from "./TitleInput";
 import AvatarSelector from "./AvatarSelector";
 import PictureSelector from "./PictureSelector";
+import ProjectDescription from "./ProjectDescription";
 
 const DetailsForm = () => {
   return (
@@ -23,6 +24,12 @@ const DetailsForm = () => {
         `}
       />
       <PictureSelector />
+      <div
+        css={css`
+          margin-top: 2em;
+        `}
+      />
+      <ProjectDescription />
     </div>
   );
 };
