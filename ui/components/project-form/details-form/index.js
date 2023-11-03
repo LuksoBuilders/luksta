@@ -12,6 +12,12 @@ import ProjectSocials from "./ProjectSocials";
 const DetailsForm = () => {
   return (
     <div>
+      <Typography variant="h4">Project Details</Typography>
+      <div
+        css={css`
+          margin-top: 1em;
+        `}
+      />
       <TitleInput />
       <div
         css={css`

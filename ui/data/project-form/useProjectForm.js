@@ -28,6 +28,18 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     setLinks(nLinks);
   };
 
+  const [tokenInfo, setTokenInfo] = useState({
+    name: "",
+    symbol: "",
+    supply: "",
+  });
+
+  const setTokenData = (key, value) => {
+    const ntokenInfo = { ...tokenInfo };
+    ntokenInfo[key] = value;
+    setTokenInfo(ntokenInfo);
+  };
+
   const addPicture = (pics) => {
     setPictures([...pictures, ...pics].slice(0, 8));
   };
@@ -73,6 +85,9 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       setDescription,
       setLink,
     },
+    token: {
+      setInfo: setTokenData,
+    },
   };
 
   const projectData = {
@@ -82,6 +97,10 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       pictures,
       description,
       links,
+      tokenInfo,
+    },
+    token: {
+      info: tokenInfo,
     },
   };
 
@@ -94,7 +113,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     saveDraft();
   }, [projectData]);
 
-  const submitted = false;
+  const submitted = true;
 
   return (
     <ProjectFormContext.Provider
