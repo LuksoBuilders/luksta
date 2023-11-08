@@ -4,6 +4,10 @@ pragma solidity ^0.8.9;
 import {LSP7DigitalAssetInitAbstract} from "@lukso/lsp-smart-contracts/contracts/LSP7DigitalAsset/LSP7DigitalAssetInitAbstract.sol";
 
 contract LukstaLSP7 is LSP7DigitalAssetInitAbstract {
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @notice Initialize a `LSP7MintableInitAbstract` token contract with: token name = `name_`, token symbol = `symbol_`, and
      * address `newOwner_` as the token contract owner.
@@ -31,7 +35,7 @@ contract LukstaLSP7 is LSP7DigitalAssetInitAbstract {
             "wrong initials"
         );
         for (uint i = 0; i < initialAmounts_.length; i++) {
-            _mint(initialReceivers_[i], initialAmounts_[i], false, "");
+            _mint(initialReceivers_[i], initialAmounts_[i], true, "");
         }
     }
 }
