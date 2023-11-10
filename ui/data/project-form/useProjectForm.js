@@ -61,6 +61,18 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     setDistribution
   );
 
+  const [vestingSetting, setVestingSetting] = useState({
+    founderCliff: 0,
+    founderTime: 6,
+    investorCliff: 0,
+    investorTime: 6,
+  });
+
+  const setVestingData = createSetKeyValueState(
+    vestingSetting,
+    setVestingSetting
+  );
+
   useEffect(() => {
     const initiateDrafting = async () => {
       if (draftingKey) {
@@ -102,6 +114,9 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       setInfo: setTokenData,
       setDistribution: setDistributionData,
     },
+    vesting: {
+      setVestingData,
+    },
   };
 
   const projectData = {
@@ -116,6 +131,9 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     token: {
       info: tokenInfo,
       distribution,
+    },
+    vesting: {
+      vestingSetting,
     },
   };
 

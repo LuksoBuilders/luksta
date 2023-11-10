@@ -9,9 +9,9 @@ import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-import TitleInput from "./details-form/TitleInput";
 import DetailsForm from "./details-form";
 import TokenManagement from "./token-management";
+import Vesting from "./vesting";
 
 const steps = [
   "Project Details",
@@ -22,7 +22,7 @@ const steps = [
 ];
 
 export default function HorizontalNonLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(1);
+  const [activeStep, setActiveStep] = React.useState(2);
   const [completed, setCompleted] = React.useState({});
 
   const totalSteps = () => {
@@ -83,6 +83,12 @@ export default function HorizontalNonLinearStepper() {
         return (
           <div>
             <TokenManagement />
+          </div>
+        );
+      case 2:
+        return (
+          <div>
+            <Vesting />
           </div>
         );
     }
