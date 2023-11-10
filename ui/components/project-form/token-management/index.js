@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import { ButtonBase, Typography, Avatar } from "@mui/material";
 
 import TokenBasics from "./TokenBasics";
+import TokenDistributions from "./TokenDistributions";
 
 const TokenManagement = () => {
   return (
@@ -15,6 +16,12 @@ const TokenManagement = () => {
         `}
       />
       <TokenBasics />
+      <div
+        css={css`
+          margin-top: 2em;
+        `}
+      />
+      <TokenDistributions />
     </div>
   );
 };

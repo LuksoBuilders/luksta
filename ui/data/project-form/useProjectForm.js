@@ -12,33 +12,6 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
   const [title, setTitle] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [pictures, setPictures] = useState([]);
-  const [description, setDescription] = useState([]);
-  const [links, setLinks] = useState({
-    website: "",
-    whitepaper: "",
-    discord: "",
-    telegram: "",
-    twitter: "",
-    github: "",
-  });
-
-  const setLink = (key, value) => {
-    const nLinks = { ...links };
-    nLinks[key] = value;
-    setLinks(nLinks);
-  };
-
-  const [tokenInfo, setTokenInfo] = useState({
-    name: "",
-    symbol: "",
-    supply: "",
-  });
-
-  const setTokenData = (key, value) => {
-    const ntokenInfo = { ...tokenInfo };
-    ntokenInfo[key] = value;
-    setTokenInfo(ntokenInfo);
-  };
 
   const addPicture = (pics) => {
     setPictures([...pictures, ...pics].slice(0, 8));
@@ -47,6 +20,46 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
   const removePicture = (index) => {
     setPictures(pictures.filter((pic, i) => index !== i));
   };
+
+  const [description, setDescription] = useState([]);
+
+  const createSetKeyValueState = (state, setState) => {
+    return (key, value) => {
+      const desiredState = { ...state };
+      desiredState[key] = value;
+      setState(desiredState);
+    };
+  };
+
+  const [links, setLinks] = useState({
+    website: "",
+    whitepaper: "",
+    discord: "",
+    telegram: "",
+    twitter: "",
+    github: "",
+  });
+  const setLink = createSetKeyValueState(links, setLinks);
+
+  const [tokenInfo, setTokenInfo] = useState({
+    name: "",
+    symbol: "",
+    supply: "",
+  });
+
+  const setTokenData = createSetKeyValueState(tokenInfo, setTokenInfo);
+
+  const [distribution, setDistribution] = useState({
+    founder: 25,
+    treasury: 25,
+    investors: 25,
+    publicSale: 25,
+  });
+
+  const setDistributionData = createSetKeyValueState(
+    distribution,
+    setDistribution
+  );
 
   useEffect(() => {
     const initiateDrafting = async () => {
@@ -87,6 +100,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     },
     token: {
       setInfo: setTokenData,
+      setDistribution: setDistributionData,
     },
   };
 
@@ -101,6 +115,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     },
     token: {
       info: tokenInfo,
+      distribution,
     },
   };
 
@@ -113,11 +128,23 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     saveDraft();
   }, [projectData]);
 
-  const submitted = true;
+  const isDistributionOkay =
+    Number(distribution.founder) +
+      Number(distribution.investors) +
+      Number(distribution.publicSale) +
+      Number(distribution.treasury) ===
+    100;
+
+  const canSubmit = () => {
+    if (!isDistributionOkay) return false;
+    return false;
+  };
+
+  const submitted = false;
 
   return (
     <ProjectFormContext.Provider
-      value={{ projectData, projectActions, submitted }}
+      value={{ projectData, projectActions, submitted, isDistributionOkay }}
     >
       {children}
     </ProjectFormContext.Provider>
