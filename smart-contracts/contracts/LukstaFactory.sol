@@ -5,12 +5,13 @@ import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 import {ILSP6KeyManager} from "@lukso/lsp-smart-contracts/contracts/LSP6KeyManager/ILSP6KeyManager.sol";
-import {ILSP9Vault} from "@lukso/lsp-smart-contracts/contracts/LSP9Vault/ILSP9Vault.sol";
-import {ILukstaLSP7} from "./interfaces/ILukstaLSP7.sol";
-import {IUniversalProfile} from "./interfaces/IUniversalProfile.sol";
 
 import {_LSP3_PROFILE_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP3ProfileMetadata/LSP3Constants.sol";
 import {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP1UniversalReceiver/LSP1Constants.sol";
+
+import {ILukstaLSP7} from "./interfaces/ILukstaLSP7.sol";
+import {IUniversalProfile} from "./interfaces/IUniversalProfile.sol";
+import {ILukstaLSP9Vault} from "./interfaces/ILukstaLSP9Vault.sol";
 
 contract LukstaFactory is Ownable {
     address public universalProfileBaseContract;
@@ -19,19 +20,17 @@ contract LukstaFactory is Ownable {
     address public vaultBaseContract;
     address public universalDelegateVaultBaseContract;
     address public lukstaLsp7BaseContract;
+    address public vestingBaseContract;
 
     uint256 public projectCounter;
-
-    struct Vault {
-        string name;
-        address vaultAddress;
-    }
 
     struct Project {
         address universalProfile;
         address keyManager;
         address universalDelegateUp;
-        Vault[] vaults;
+        address founderVault;
+        address investorsVault;
+        address treasuryVault;
         address projectToken;
         uint256 auctionId;
     }
@@ -44,7 +43,8 @@ contract LukstaFactory is Ownable {
         address universalDelegateUPBaseContract_,
         address vaultBaseContract_,
         address universalDelegateVaultBaseContract_,
-        address lukstaLsp7BaseContract_
+        address lukstaLsp7BaseContract_,
+        address vestingBaseContract_
     ) {
         setBaseContracts(
             universalProfileBaseContract_,
@@ -52,7 +52,8 @@ contract LukstaFactory is Ownable {
             universalDelegateUPBaseContract_,
             vaultBaseContract_,
             universalDelegateVaultBaseContract_,
-            lukstaLsp7BaseContract_
+            lukstaLsp7BaseContract_,
+            vestingBaseContract_
         );
     }
 
@@ -62,7 +63,8 @@ contract LukstaFactory is Ownable {
         address universalDelegateUPBaseContract_,
         address vaultBaseContract_,
         address universalDelegateVaultBaseContract_,
-        address lukstaLsp7BaseContract_
+        address lukstaLsp7BaseContract_,
+        address vestingBaseContract_
     ) public onlyOwner {
         universalProfileBaseContract = universalProfileBaseContract_;
         keyManagerBaseContract = keyManagerBaseContract_;
@@ -70,9 +72,16 @@ contract LukstaFactory is Ownable {
         vaultBaseContract = vaultBaseContract_;
         universalDelegateVaultBaseContract = universalDelegateVaultBaseContract_;
         lukstaLsp7BaseContract = lukstaLsp7BaseContract_;
+        vestingBaseContract = vestingBaseContract_;
     }
 
-    function createProject(bytes memory lsp3Profile_) public {
+    function createProject(
+        bytes memory lsp3Profile_,
+        string memory tokenName_,
+        string memory symbol_,
+        uint256 totalSupply_,
+        uint256[4] memory distributionAmounts_
+    ) public {
         projectCounter++;
         Project storage project = projects[projectCounter];
         project.universalProfile = Clones.clone(universalProfileBaseContract);
@@ -88,7 +97,50 @@ contract LukstaFactory is Ownable {
             _LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY,
             abi.encodePacked(project.universalDelegateUp)
         );
-        //address projectProfile = Clones.clone(universalProfileImplementation_);
-        //address keyManager = Clones.clone(keyManagerImplementation_);
+        // Setting vaults
+        project.founderVault = _setupVault(project.universalProfile);
+        project.investorsVault = _setupVault(project.universalProfile);
+        project.treasuryVault = _setupVault(project.universalProfile);
+
+        // create token
+        project.projectToken = Clones.clone(lukstaLsp7BaseContract);
+        ILukstaLSP7(project.projectToken).initialize(
+            tokenName_,
+            symbol_,
+            project.universalProfile,
+            false,
+            [
+                project.founderVault,
+                project.investorsVault,
+                project.treasuryVault,
+                address(this)
+            ],
+            distributionAmounts_
+        );
+    }
+
+    function _setupVault(
+        address owner_
+    ) internal returns (address vaultAddress) {
+        vaultAddress = Clones.clone(vaultBaseContract);
+        ILukstaLSP9Vault(vaultAddress).initialize(address(this));
+        address universalReceiver = Clones.clone(
+            universalDelegateVaultBaseContract
+        );
+        ILukstaLSP9Vault(vaultAddress).setData(
+            _LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY,
+            abi.encodePacked(universalReceiver)
+        );
+        ILukstaLSP9Vault(vaultAddress).transferOwnership(owner_);
+        (bool success, ) = owner_.call(
+            abi.encodeWithSignature(
+                "execute(uint256,address,uint256,bytes)",
+                0,
+                vaultAddress,
+                0,
+                abi.encodeWithSignature("acceptOwnership()")
+            )
+        );
+        require(success, "ownership failed");
     }
 }

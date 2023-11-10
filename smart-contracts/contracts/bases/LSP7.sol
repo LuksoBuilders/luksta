@@ -21,8 +21,8 @@ contract LukstaLSP7 is LSP7DigitalAssetInitAbstract {
         string memory symbol_,
         address newOwner_,
         bool isNonDivisible_,
-        address[] memory initialReceivers_,
-        uint256[] memory initialAmounts_
+        address[4] memory initialReceivers_,
+        uint256[4] memory initialAmounts_
     ) external initializer {
         LSP7DigitalAssetInitAbstract._initialize(
             name_,

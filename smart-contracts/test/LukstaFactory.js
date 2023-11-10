@@ -37,6 +37,9 @@ describe("Luksta Factory", function () {
     const Vault = await ethers.getContractFactory("Vault");
     const vault = await Vault.deploy();
 
+    const LSP7Vesting = await ethers.getContractFactory("LSP7Vesting");
+    const lsp7Vesting = await LSP7Vesting.deploy();
+
     const LukstaFactory = await ethers.getContractFactory("LukstaFactory");
     const lukstaFactory = await LukstaFactory.deploy(
       universalProfile.address,
@@ -44,7 +47,8 @@ describe("Luksta Factory", function () {
       universalReceiverDelegateUP.address,
       vault.address,
       universalReceiverDelegateVault.address,
-      lukstaLsp7.address
+      lukstaLsp7.address,
+      lsp7Vesting.address
     );
     return {
       lukstaFactory,
@@ -54,6 +58,7 @@ describe("Luksta Factory", function () {
       universalReceiverDelegateVault,
       universalProfile,
       vault,
+      lsp7Vesting,
     };
   }
 
@@ -67,6 +72,7 @@ describe("Luksta Factory", function () {
         universalReceiverDelegateVault,
         universalProfile,
         vault,
+        lsp7Vesting,
       } = await loadFixture(deploy);
 
       expect(await lukstaFactory.universalProfileBaseContract()).to.equal(
@@ -84,6 +90,9 @@ describe("Luksta Factory", function () {
       expect(await lukstaFactory.vaultBaseContract()).to.equal(vault.address);
       expect(await lukstaFactory.lukstaLsp7BaseContract()).to.equal(
         lukstaLsp7.address
+      );
+      expect(await lukstaFactory.vestingBaseContract()).to.equal(
+        lsp7Vesting.address
       );
     });
   });
@@ -111,23 +120,29 @@ describe("Luksta Factory", function () {
       const _LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY =
         "0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47";
 
-      await lukstaFactory.createProject(TestLSP3ProfileValue);
+      await lukstaFactory.createProject(
+        TestLSP3ProfileValue,
+        "testToken",
+        "tst",
+        1,
+        [1000, 2000, 3000, 4000]
+      );
 
       const createdProject = await lukstaFactory.projects(1);
 
-      expect(
-        await universalProfile
-          .attach(createdProject.universalProfile)
-          .getData(LSP3ProfileKey)
-      ).to.be.equal(TestLSP3ProfileValue);
-
-      expect(
-        await universalProfile
-          .attach(createdProject.universalProfile)
-          .getData(LSP3ProfileKey)
-      ).to.be.equal(TestLSP3ProfileValue);
-
       console.log(createdProject);
+
+      expect(
+        await universalProfile
+          .attach(createdProject.universalProfile)
+          .getData(LSP3ProfileKey)
+      ).to.be.equal(TestLSP3ProfileValue);
+
+      expect(
+        await universalProfile
+          .attach(createdProject.universalProfile)
+          .getData(LSP3ProfileKey)
+      ).to.be.equal(TestLSP3ProfileValue);
 
       expect(
         (
@@ -136,6 +151,23 @@ describe("Luksta Factory", function () {
             .getData(_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY)
         ).toLowerCase()
       ).to.be.equal(createdProject.universalDelegateUp.toLowerCase());
+
+      const projectToken = lukstaLsp7.attach(createdProject.projectToken);
+
+      expect(
+        await projectToken.balanceOf(createdProject.founderVault)
+      ).to.be.equal(1000);
+      expect(
+        await projectToken.balanceOf(createdProject.investorsVault)
+      ).to.be.equal(2000);
+
+      expect(
+        await projectToken.balanceOf(createdProject.treasuryVault)
+      ).to.be.equal(3000);
+
+      expect(await projectToken.balanceOf(lukstaFactory.address)).to.be.equal(
+        4000
+      );
     });
   });
 });
