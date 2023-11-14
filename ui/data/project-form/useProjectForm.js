@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import localforage from "localforage";
+import moment from "moment";
 
 export const ProjectFormContext = createContext();
 
@@ -73,6 +74,16 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     setVestingSetting
   );
 
+  // TODO: must change this when using the drafting key
+  const [date, setDate] = useState(
+    moment()
+      .startOf("isoWeek")
+      .add(1, "week")
+      .set({ hour: 12, minute: 0, second: 0 })
+  );
+
+  const [duration, setDuration] = useState(72);
+
   useEffect(() => {
     const initiateDrafting = async () => {
       if (draftingKey) {
@@ -117,6 +128,10 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     vesting: {
       setVestingData,
     },
+    auction: {
+      setDate,
+      setDuration,
+    },
   };
 
   const projectData = {
@@ -135,12 +150,22 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     vesting: {
       vestingSetting,
     },
+    auction: {
+      date,
+      duration,
+    },
   };
 
   useEffect(() => {
     const saveDraft = async () => {
-      await localforage.setItem(draftKey, projectData);
-      1;
+      await localforage.setItem(draftKey, {
+        ...projectData,
+        auction: {
+          date: projectData.auction.date
+            ? projectData.auction.date.toDate()
+            : undefined,
+        },
+      });
     };
 
     saveDraft();
@@ -158,7 +183,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     return false;
   };
 
-  const submitted = false;
+  const submitted = true;
 
   return (
     <ProjectFormContext.Provider
