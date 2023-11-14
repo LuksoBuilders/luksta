@@ -13,6 +13,7 @@ import DetailsForm from "./details-form";
 import TokenManagement from "./token-management";
 import Vesting from "./vesting";
 import AuctionDetails from "./auction-details";
+import Whitelisting from "./whitelisting";
 
 const steps = [
   "Project Details",
@@ -23,7 +24,7 @@ const steps = [
 ];
 
 export default function HorizontalNonLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(3);
+  const [activeStep, setActiveStep] = React.useState(4);
   const [completed, setCompleted] = React.useState({});
 
   const totalSteps = () => {
@@ -96,6 +97,12 @@ export default function HorizontalNonLinearStepper() {
         return (
           <div>
             <AuctionDetails />
+          </div>
+        );
+      case 4:
+        return (
+          <div>
+            <Whitelisting />
           </div>
         );
     }

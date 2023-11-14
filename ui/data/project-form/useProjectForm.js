@@ -84,6 +84,8 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
 
   const [duration, setDuration] = useState(72);
 
+  const [whitelistEnabled, setWhitelistEnabled] = useState(false);
+
   useEffect(() => {
     const initiateDrafting = async () => {
       if (draftingKey) {
@@ -132,6 +134,9 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       setDate,
       setDuration,
     },
+    whitelisting: {
+      setWhitelistEnabled,
+    },
   };
 
   const projectData = {
@@ -153,6 +158,9 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     auction: {
       date,
       duration,
+    },
+    whitelisting: {
+      whitelistEnabled,
     },
   };
 
