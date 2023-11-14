@@ -43,6 +43,9 @@ const Header = () => {
                   margin-right: 0.5em;
                   margin-left: 1.5em;
                 `}
+                onClick={() => {
+                  router.push(`/`);
+                }}
               >
                 Home
               </Button>

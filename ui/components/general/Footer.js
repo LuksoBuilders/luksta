@@ -34,8 +34,7 @@ const Footer = () => {
   return (
     <div
       css={(theme) => css`
-        background-color: ${theme.palette.primary.light};
-        min-height: 200px;
+        min-height: 300px;
       `}
     >
       <Container>
@@ -45,7 +44,7 @@ const Footer = () => {
               css={css`
                 display: flex;
                 align-items: center;
-                margin-top: 2em;
+                margin-top: 5em;
                 justify-content: space-between;
               `}
             >
@@ -69,7 +68,7 @@ const Footer = () => {
           <Col lg={6}>
             <div
               css={css`
-                margin-top: 2em;
+                margin-top: 5em;
               `}
             ></div>
             <Row>
