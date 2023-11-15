@@ -12,6 +12,8 @@ import {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY} from "@lukso/lsp-smart-contracts/
 import {ILukstaLSP7} from "./interfaces/ILukstaLSP7.sol";
 import {IUniversalProfile} from "./interfaces/IUniversalProfile.sol";
 import {ILukstaLSP9Vault} from "./interfaces/ILukstaLSP9Vault.sol";
+import {IEasyAuction} from "./interfaces/IEasyAuction.sol";
+import {ILYX} from "./interfaces/ILYX.sol";
 
 contract LukstaFactory is Ownable {
     address public universalProfileBaseContract;
@@ -21,6 +23,9 @@ contract LukstaFactory is Ownable {
     address public universalDelegateVaultBaseContract;
     address public lukstaLsp7BaseContract;
     address public vestingBaseContract;
+
+    IEasyAuction public easyAuction;
+    ILYX public wrappedLyx;
 
     uint256 public projectCounter;
 
@@ -44,7 +49,9 @@ contract LukstaFactory is Ownable {
         address vaultBaseContract_,
         address universalDelegateVaultBaseContract_,
         address lukstaLsp7BaseContract_,
-        address vestingBaseContract_
+        address vestingBaseContract_,
+        address easyAuctionContract_,
+        address wrappedLyx_
     ) {
         setBaseContracts(
             universalProfileBaseContract_,
@@ -53,7 +60,9 @@ contract LukstaFactory is Ownable {
             vaultBaseContract_,
             universalDelegateVaultBaseContract_,
             lukstaLsp7BaseContract_,
-            vestingBaseContract_
+            vestingBaseContract_,
+            easyAuctionContract_,
+            wrappedLyx_
         );
     }
 
@@ -64,7 +73,9 @@ contract LukstaFactory is Ownable {
         address vaultBaseContract_,
         address universalDelegateVaultBaseContract_,
         address lukstaLsp7BaseContract_,
-        address vestingBaseContract_
+        address vestingBaseContract_,
+        address easyAuctionContract_,
+        address wrappedLyx_
     ) public onlyOwner {
         universalProfileBaseContract = universalProfileBaseContract_;
         keyManagerBaseContract = keyManagerBaseContract_;
@@ -73,15 +84,23 @@ contract LukstaFactory is Ownable {
         universalDelegateVaultBaseContract = universalDelegateVaultBaseContract_;
         lukstaLsp7BaseContract = lukstaLsp7BaseContract_;
         vestingBaseContract = vestingBaseContract_;
+        easyAuction = IEasyAuction(easyAuctionContract_);
+        wrappedLyx = ILYX(wrappedLyx_);
     }
 
     function createProject(
         bytes memory lsp3Profile_,
         string memory tokenName_,
         string memory symbol_,
-        uint256 totalSupply_,
-        uint256[4] memory distributionAmounts_
+        uint256[4] memory distributionAmounts_,
+        uint256 auctionStartTime_,
+        uint256 auctionDuration_
     ) public {
+        require(auctionStartTime_ > block.timestamp, "can't auction in past");
+        require(
+            distributionAmounts_[3] <= type(uint96).max,
+            "overflow auction"
+        );
         projectCounter++;
         Project storage project = projects[projectCounter];
         project.universalProfile = Clones.clone(universalProfileBaseContract);
@@ -116,6 +135,28 @@ contract LukstaFactory is Ownable {
                 address(this)
             ],
             distributionAmounts_
+        );
+
+        // approve easy auction
+        ILukstaLSP7(project.projectToken).authorizeOperator(
+            address(easyAuction),
+            distributionAmounts_[3],
+            ""
+        );
+
+        // initiate the auction
+        project.auctionId = easyAuction.initiateAuction(
+            ILukstaLSP7(project.projectToken),
+            wrappedLyx,
+            auctionStartTime_ + auctionDuration_ / 2,
+            auctionStartTime_ + auctionDuration_,
+            uint96(distributionAmounts_[3]),
+            1,
+            1,
+            1,
+            true,
+            address(0),
+            "0x"
         );
     }
 

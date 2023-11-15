@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
         css={css`
           display: flex;
           flex-direction: column;
-          min-height: calc(100vh - 200px);
+          min-height: calc(100vh - 300px);
         `}
       >
         <div>

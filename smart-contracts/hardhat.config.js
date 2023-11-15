@@ -1,6 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-truffle5");
 
+const TESTNET_PRIVATE_KEY = "";
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   networks: {
@@ -10,6 +12,10 @@ module.exports = {
         url: "https://rpc.testnet.lukso.network",
       },
     },
+    //lukso_testnet: {
+    //  url: "https://rpc.testnet.lukso.network",
+    //  accounts: [TESTNET_PRIVATE_KEY],
+    //},
   },
   solidity: {
     compilers: [

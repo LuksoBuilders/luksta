@@ -9,7 +9,8 @@ const deployProxy = require("./deployProxy");
 
 describe("LSP7Vesting", function () {
   async function deploy() {
-    const [deployer, beneficiary, tokenOwner] = await ethers.getSigners();
+    const [deployer, beneficiary, tokenOwner, to2, to3, to4] =
+      await ethers.getSigners();
 
     const LukstaLSP7 = await ethers.getContractFactory("LukstaLSP7");
     const lukstaLSP7Base = await LukstaLSP7.deploy();
@@ -18,15 +19,15 @@ describe("LSP7Vesting", function () {
       await deployProxy(lukstaLSP7Base.address, deployer)
     );
 
-    const totalSupply = 10000000;
+    const totalSupply = 10000000 * 4;
 
     await lukstaLsp7.initialize(
       "test",
       "tst",
       tokenOwner.address,
       false,
-      [tokenOwner.address],
-      [10000000]
+      [tokenOwner.address, to2.address, to3.address, to4.address],
+      [10000000, 10000000, 10000000, 10000000]
     );
 
     const LSP7Vesting = await ethers.getContractFactory("LSP7Vesting");

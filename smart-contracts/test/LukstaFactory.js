@@ -40,6 +40,15 @@ describe("Luksta Factory", function () {
     const LSP7Vesting = await ethers.getContractFactory("LSP7Vesting");
     const lsp7Vesting = await LSP7Vesting.deploy();
 
+    const easyAuctionAddress = "0xed6B3274Ec4D7CEc56d24D7584C0B16a3c592300";
+    const easyAuction = await ethers.getContractAt(
+      "IEasyAuction",
+      easyAuctionAddress
+    );
+
+    const ILYXAddress = "0xBc92DA59222fC799822f92A4D37ccc9B9986187e";
+    const iLyx = await ethers.getContractAt("ILYX", ILYXAddress);
+
     const LukstaFactory = await ethers.getContractFactory("LukstaFactory");
     const lukstaFactory = await LukstaFactory.deploy(
       universalProfile.address,
@@ -48,8 +57,11 @@ describe("Luksta Factory", function () {
       vault.address,
       universalReceiverDelegateVault.address,
       lukstaLsp7.address,
-      lsp7Vesting.address
+      lsp7Vesting.address,
+      easyAuction.address,
+      iLyx.address
     );
+
     return {
       lukstaFactory,
       keyManager,
@@ -120,12 +132,20 @@ describe("Luksta Factory", function () {
       const _LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY =
         "0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47";
 
+      const auctionStartTime = parseInt(Number(new Date()) / 1000);
+      const blockTimestamp = (await ethers.provider.getBlock("latest"))
+        .timestamp;
+
+      console.log(auctionStartTime, blockTimestamp);
+      const duration = 300;
+
       await lukstaFactory.createProject(
         TestLSP3ProfileValue,
         "testToken",
         "tst",
-        1,
-        [1000, 2000, 3000, 4000]
+        [1000, 2000, 3000, 4000],
+        auctionStartTime + 1000,
+        duration
       );
 
       const createdProject = await lukstaFactory.projects(1);
@@ -164,10 +184,6 @@ describe("Luksta Factory", function () {
       expect(
         await projectToken.balanceOf(createdProject.treasuryVault)
       ).to.be.equal(3000);
-
-      expect(await projectToken.balanceOf(lukstaFactory.address)).to.be.equal(
-        4000
-      );
     });
   });
 });

@@ -1,13 +1,3 @@
-# Sample Hardhat Project
-
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-GAS_REPORT=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+Easy Auction Address: 0xed6B3274Ec4D7CEc56d24D7584C0B16a3c592300
+Wrapped LYX Address: 0xBc92DA59222fC799822f92A4D37ccc9B9986187e
+depositAndPlaceOrder address is: 0x1B7B7393fF6D18FDA01e89777b11a7dbAfE59399
