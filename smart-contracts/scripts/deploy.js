@@ -6,19 +6,57 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 
+const deploySingle = async (contractName) => {
+  const Contract = await hre.ethers.getContractFactory(contractName);
+  const instance = await Contract.deploy();
+
+  console.log("???");
+
+  await instance.deployed();
+
+  console.log(
+    `${contractName} based contract deployed at: ${instance.address}`
+  );
+
+  return instance;
+};
+
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const keyManager = "0xb228510D275b86ffF65829dD5be51bAD96b536D0";
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  const easyAuctionAddress = "0xed6B3274Ec4D7CEc56d24D7584C0B16a3c592300";
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const ILYXAddress = "0xBc92DA59222fC799822f92A4D37ccc9B9986187e";
 
-  await lock.deployed();
+  let contractsList = {};
 
-  console.log("Lock with 1 ETH deployed to:", lock.address);
+  const contractsNames = [
+    "LukstaLSP7",
+    "UniversalReceiverDelegateUP",
+    "UniversalReceiverDelegateVault",
+    "UniversalProfile",
+    "Vault",
+    "LSP7Vesting",
+  ];
+  for (const contractName of contractsNames) {
+    console.log("starting to deploy: ", contractName);
+    contractsList[contractName] = await deploySingle(contractName);
+  }
+
+  const LukstaFactory = await hre.ethers.getContractFactory("LukstaFactory");
+  const lukstaFactory = await LukstaFactory.deploy(
+    contractsList["UniversalProfile"].address,
+    keyManager,
+    contractsList["UniversalReceiverDelegateUP"].address,
+    contractsList["Vault"].address,
+    contractsList["UniversalReceiverDelegateVault"].address,
+    contractsList["LukstaLSP7"].address,
+    contractsList["LSP7Vesting"].address,
+    easyAuctionAddress,
+    ILYXAddress
+  );
+
+  console.log("Luksta Factory address is: ", lukstaFactory.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

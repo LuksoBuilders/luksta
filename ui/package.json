@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.0",
     "@erc725/erc725.js": "^0.20.1",
     "@fontsource/roboto": "^5.0.8",
+    "@lukso/lsp-factory.js": "^3.2.1",
     "@lukso/web3-onboard-config": "^1.0.3",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.16",

@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import localforage from "localforage";
 import moment from "moment";
+import { useExtention } from "../universal-hooks/useExtention";
+
+const { LSPFactory } = require("@lukso/lsp-factory.js/build/main/src/index.js");
+const {
+  prepareMetadataImage,
+} = require("@lukso/lsp-factory.js/build/main/src/lib/helpers/uploader.helper.js");
+const {
+  defaultUploadOptions,
+} = require("@lukso/lsp-factory.js/build/main/src/lib/helpers/config.helper.js");
 
 export const ProjectFormContext = createContext();
 
@@ -9,6 +18,8 @@ export const useProjectForm = () => {
 };
 
 export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
+  const { provider } = useExtention();
+
   const [draftKey, setDraftKey] = useState("");
   const [title, setTitle] = useState("");
   const [avatar, setAvatar] = useState(null);
@@ -191,11 +202,92 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     return false;
   };
 
-  const submitted = true;
+  const submitted = false;
+
+  const uploadData = async () => {
+    const lspFactory = new LSPFactory(provider);
+
+    const universalProfile = lspFactory.UniversalProfile;
+
+    const prepareMetadataWithDelay = (picture, delay, tries = 0) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            resolve(await prepareMetadataImage(defaultUploadOptions, picture));
+          } catch (err) {
+            if (tries < 10) {
+              return resolve(
+                prepareMetadataWithDelay(picture, delay * 2, tries + 1)
+              );
+            } else {
+              reject(`failed after 10 tries: `, err);
+            }
+          }
+        }, delay);
+      });
+    };
+
+    const sleep = (time) =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      });
+
+    const uploadingProfileDataWithDelay = (data, delay = 5000, tries = 0) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          console.log(`trying to upload profile with ${delay}ms delay`);
+          try {
+            resolve(await universalProfile.uploadProfileData(data));
+          } catch (err) {
+            if (tries < 10) {
+              return resolve(
+                uploadingProfileDataWithDelay(data, delay * 2, tries + 1)
+              );
+            } else {
+              reject(`failed after 10 tries: `, err);
+            }
+          }
+        }, delay);
+      });
+    };
+
+    try {
+      const images = await Promise.all(
+        pictures.map(
+          async (picture, i) =>
+            await prepareMetadataWithDelay(picture, i * 1000)
+        )
+      );
+
+      console.log(`images uploaded: `, images);
+
+      const profileData = await uploadingProfileDataWithDelay({
+        profileImage: avatar,
+        backgroundImage: pictures[0],
+        name: title,
+        description: description,
+        links: Object.entries(links),
+        tags: [],
+        images,
+      });
+
+      console.log(profileData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <ProjectFormContext.Provider
-      value={{ projectData, projectActions, submitted, isDistributionOkay }}
+      value={{
+        projectData,
+        projectActions,
+        submitted,
+        isDistributionOkay,
+        uploadData,
+      }}
     >
       {children}
     </ProjectFormContext.Provider>

@@ -6,7 +6,7 @@ import {
   Typography,
   Grid,
   InputAdornment,
-  IconButton,
+  Button,
 } from "@mui/material";
 import { Language, Description } from "@mui/icons-material";
 import { BsDiscord, BsTelegram, BsTwitter, BsGithub } from "react-icons/bs";
@@ -46,7 +46,8 @@ const linksItems = [
 ];
 
 const ProjectSocials = () => {
-  const { projectData, projectActions, submitted } = useProjectForm();
+  const { projectData, projectActions, submitted, uploadData } =
+    useProjectForm();
 
   const links = projectData.details.links;
   const setLink = projectActions.details.setLink;
@@ -97,6 +98,7 @@ const ProjectSocials = () => {
           </Grid>
         ))}
       </Grid>
+      <Button onClick={uploadData}>Test</Button>
     </div>
   );
 };

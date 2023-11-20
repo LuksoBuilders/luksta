@@ -1,3 +1,11 @@
 Easy Auction Address: 0xed6B3274Ec4D7CEc56d24D7584C0B16a3c592300
 Wrapped LYX Address: 0xBc92DA59222fC799822f92A4D37ccc9B9986187e
 depositAndPlaceOrder address is: 0x1B7B7393fF6D18FDA01e89777b11a7dbAfE59399
+
+LukstaLSP7 based contract deployed at: 0xa520B2F3719fc0c14344cf854D861CFE492a8255
+UniversalReceiverDelegateUP based contract deployed at: 0x2de6124C0C731965aa87Df4f1EbEC5971287e319
+UniversalReceiverDelegateVault based contract deployed at: 0x006c3B5B4ee35504a8f5138396d4a2ABd1Da46b6
+UniversalProfile based contract deployed at: 0xf5d395519aAa2eAf1361708acB934c3d2c829d13
+Vault based contract deployed at: 0xf02277cC1B66Dda498693C45653838b08df46B2F
+LSP7Vesting based contract deployed at: 0x7A2E4F7aFB1328EeDF4f05aB9F65255514A591cd
+Luksta Factory address is: 0x79aDcd003088866e15905ddF41a99B9699f20d96

@@ -136,7 +136,6 @@ describe("Luksta Factory", function () {
       const blockTimestamp = (await ethers.provider.getBlock("latest"))
         .timestamp;
 
-      console.log(auctionStartTime, blockTimestamp);
       const duration = 300;
 
       await lukstaFactory.createProject(

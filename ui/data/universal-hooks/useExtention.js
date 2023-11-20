@@ -13,7 +13,18 @@ export const ExtentionProvider = ({ children }) => {
   const [signer, setSigner] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  const [lukstaFactory, setLukstaFactory] = useState();
+
+  useEffect(() => {}, [provider]);
+
   const connectedAccount = accounts[0];
+
+  useEffect(() => {
+    if (connectedAccount) {
+      console.log("connecting ...");
+      connect();
+    }
+  }, [connectedAccount]);
 
   const getAccounts = async (provider) => {
     setAccounts(await provider.send("eth_accounts", []));
@@ -36,7 +47,9 @@ export const ExtentionProvider = ({ children }) => {
   const connect = async () => {
     try {
       if (window.ethereum) {
-        await provider.send("eth_requestAccounts", []);
+        if (!connectedAccount) {
+          await provider.send("eth_requestAccounts", []);
+        }
         const walletSigner = provider.getSigner();
         setProvider(provider);
         getAccounts(provider);

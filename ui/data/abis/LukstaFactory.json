@@ -1,0 +1,380 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "universalProfileBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "keyManagerBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "universalDelegateUPBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "vaultBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "universalDelegateVaultBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "lukstaLsp7BaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "vestingBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "easyAuctionContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "wrappedLyx_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "lsp3Profile_",
+        "type": "bytes"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenName_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol_",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256[4]",
+        "name": "distributionAmounts_",
+        "type": "uint256[4]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "auctionStartTime_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "auctionDuration_",
+        "type": "uint256"
+      }
+    ],
+    "name": "createProject",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "easyAuction",
+    "outputs": [
+      {
+        "internalType": "contract IEasyAuction",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "keyManagerBaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lukstaLsp7BaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "projectCounter",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "projects",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "universalProfile",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "keyManager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "universalDelegateUp",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "founderVault",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "investorsVault",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "treasuryVault",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "projectToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "universalProfileBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "keyManagerBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "universalDelegateUPBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "vaultBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "universalDelegateVaultBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "lukstaLsp7BaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "vestingBaseContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "easyAuctionContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "wrappedLyx_",
+        "type": "address"
+      }
+    ],
+    "name": "setBaseContracts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "universalDelegateUPBaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "universalDelegateVaultBaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "universalProfileBaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vaultBaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vestingBaseContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "wrappedLyx",
+    "outputs": [
+      {
+        "internalType": "contract ILYX",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

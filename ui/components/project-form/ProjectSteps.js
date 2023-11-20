@@ -24,7 +24,7 @@ const steps = [
 ];
 
 export default function HorizontalNonLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(4);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
 
   const totalSteps = () => {
