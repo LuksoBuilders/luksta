@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import localforage from "localforage";
 import moment from "moment";
 import { useExtention } from "../universal-hooks/useExtention";
+import { ethers } from "ethers";
 
 const { LSPFactory } = require("@lukso/lsp-factory.js/build/main/src/index.js");
 const {
@@ -18,7 +19,7 @@ export const useProjectForm = () => {
 };
 
 export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
-  const { provider } = useExtention();
+  const { provider, signer, getLukstaFactory } = useExtention();
 
   const [draftKey, setDraftKey] = useState("");
   const [title, setTitle] = useState("");
@@ -33,7 +34,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
     setPictures(pictures.filter((pic, i) => index !== i));
   };
 
-  const [description, setDescription] = useState([]);
+  const [description, setDescription] = useState("");
 
   const createSetKeyValueState = (state, setState) => {
     return (key, value) => {
@@ -204,6 +205,82 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
 
   const submitted = false;
 
+  const [stepOneSubmitted, setStepOneSubmitted] = useState(false);
+  const [detailsCompleted, setDetailsComplete] = useState(false);
+
+  const completeDetails = () => {
+    setStepOneSubmitted(true);
+    if (title && description) {
+      setDetailsComplete(true);
+      return true;
+    }
+    return false;
+  };
+
+  const [tokenManagementSubmitted, setTokenManagementSubmitted] =
+    useState(false);
+  const [tokenManagementCompleted, setTokenManagementCompleted] =
+    useState(false);
+
+  const completeTokenManagement = () => {
+    setTokenManagementSubmitted(true);
+    const distributationValidator = () => {
+      let isValid = true;
+      Object.values(distribution).forEach((item) => {
+        if (item < 0) {
+          isValid = false;
+        }
+      });
+      if (
+        Object.values(distribution).reduce(
+          (accumulator, currentValue) => accumulator + currentValue
+        ) !== 100
+      ) {
+        isValid = false;
+      }
+      return isValid;
+    };
+    if (
+      tokenInfo.name &&
+      tokenInfo.supply &&
+      !isNaN(Number(tokenInfo.supply)) &&
+      tokenInfo.symbol &&
+      distributationValidator()
+    ) {
+      setTokenManagementCompleted(true);
+      return true;
+    }
+    return false;
+  };
+
+  const [vestingCompleted, setVestingCompleted] = useState(false);
+
+  const completeVesting = () => {
+    setVestingCompleted(true);
+    return true;
+  };
+
+  const [auctionManagementSubmitted, setAuctionManagementSubmitted] =
+    useState(false);
+  const [auctionManagementCompleted, setAuctionManagementCompleted] =
+    useState(false);
+
+  const completeAuctionManagement = () => {
+    setAuctionManagementSubmitted(true);
+    if (duration && duration !== 0 && date.isAfter(new Date())) {
+      setAuctionManagementCompleted(true);
+      return true;
+    }
+    return false;
+  };
+
+  const [whitelistingCompleted, setWhitelistingCompelted] = useState(false);
+
+  const completeWhitelisting = () => {
+    setWhitelistingCompelted(true);
+    return true;
+  };
+
   const uploadData = async () => {
     const lspFactory = new LSPFactory(provider);
 
@@ -273,9 +350,78 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
         images,
       });
 
-      console.log(profileData);
+      return profileData;
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const [projectCreationState, setProjectCreationState] = useState("");
+  const [projectCreationError, setProjectCreationError] = useState("");
+
+  const createProject = async () => {
+    let data;
+    setProjectCreationState("Uploading Data");
+    try {
+      data = await uploadData();
+    } catch (err) {
+      console.log(err);
+      setProjectCreationState("Failed");
+      setProjectCreationError("Failed to upload project data, try again.");
+      return;
+    }
+    try {
+      const offset = 2;
+      const hashFunctionBytes = 8;
+
+      const utils = ethers.utils;
+
+      const hashPart = utils
+        .keccak256(utils.toUtf8Bytes("keccak256(utf8)"))
+        .substring(offset, offset + hashFunctionBytes);
+
+      const { url, json } = data;
+
+      const stringifiedData = JSON.stringify(json);
+
+      const jsonHash = utils
+        .keccak256(utils.toUtf8Bytes(stringifiedData))
+        .substring(
+          2,
+          utils.keccak256(utils.toUtf8Bytes(stringifiedData)).length
+        );
+
+      console.log(jsonHash);
+
+      const urlBytes = utils
+        .hexlify(utils.toUtf8Bytes(url))
+        .substring(2, utils.hexlify(utils.toUtf8Bytes(url)).length);
+
+      console.log(urlBytes);
+
+      const lsp3Bytes = `0x${hashPart}${jsonHash}${urlBytes}`;
+
+      console.log(lsp3Bytes, signer);
+
+      const lukstaFactory = await getLukstaFactory();
+
+      setProjectCreationState("Waiting for transaction approval");
+
+      const projectCreationTx = await lukstaFactory.createProject(
+        lsp3Bytes,
+        "qwe",
+        "qwe",
+        [1000, 1000, 1000, 1000],
+        parseInt(Number(new Date()) / 1000) + 20000,
+        7200
+      );
+
+      console.log(projectCreationTx);
+    } catch (err) {
+      console.log(err);
+      setProjectCreationState("Failed");
+      setProjectCreationError("Failed to send transaction.");
+      return;
     }
   };
 
@@ -287,6 +433,22 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
         submitted,
         isDistributionOkay,
         uploadData,
+        stepOneSubmitted,
+        detailsCompleted,
+        completeDetails,
+        tokenManagementCompleted,
+        tokenManagementSubmitted,
+        completeTokenManagement,
+        completeVesting,
+        vestingCompleted,
+        completeAuctionManagement,
+        auctionManagementSubmitted,
+        auctionManagementCompleted,
+        whitelistingCompleted,
+        completeWhitelisting,
+        projectCreationState,
+        projectCreationError,
+        createProject,
       }}
     >
       {children}

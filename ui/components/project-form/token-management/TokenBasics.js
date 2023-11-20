@@ -6,17 +6,20 @@ import { TextField, Typography, Grid } from "@mui/material";
 import { useProjectForm } from "../../../data/project-form/useProjectForm";
 
 const TokenBasics = () => {
-  const { projectData, projectActions, submitted } = useProjectForm();
+  const { projectData, projectActions, tokenManagementSubmitted } =
+    useProjectForm();
 
   const tokenInfo = projectData.token.info;
   const setInfo = projectActions.token.setInfo;
 
   const nameError =
-    submitted & !tokenInfo.name ? "Token Name is required!" : "";
+    tokenManagementSubmitted & !tokenInfo.name ? "Token Name is required!" : "";
   const symbolError =
-    submitted & !tokenInfo.symbol ? "Token Symbol is required!" : "";
+    tokenManagementSubmitted & !tokenInfo.symbol
+      ? "Token Symbol is required!"
+      : "";
   const supplyError =
-    submitted & (!tokenInfo.supply || isNaN(tokenInfo.supply))
+    tokenManagementSubmitted & (!tokenInfo.supply || isNaN(tokenInfo.supply))
       ? "Token supply must be a number and is required!"
       : "";
 

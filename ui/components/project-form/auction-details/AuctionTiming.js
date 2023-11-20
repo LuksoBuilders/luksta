@@ -11,7 +11,8 @@ import { HourglassEmpty } from "@mui/icons-material";
 import { useProjectForm } from "../../../data/project-form/useProjectForm";
 
 const AuctionTiming = () => {
-  const { projectData, projectActions, submitted } = useProjectForm();
+  const { projectData, projectActions, auctionManagementSubmitted } =
+    useProjectForm();
 
   const onlyNotNegativeInts = (value) =>
     value < 0 || isNaN(value)
@@ -27,7 +28,7 @@ const AuctionTiming = () => {
   const setDuration = projectActions.auction.setDuration;
 
   const durationError =
-    submitted && (!duration || duration == 0)
+    auctionManagementSubmitted && (!duration || duration == 0)
       ? "Duration must more than 0"
       : "";
   //const supplyError =

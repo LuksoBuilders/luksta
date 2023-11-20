@@ -8,12 +8,20 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
+} from "@mui/material";
 
 import DetailsForm from "./details-form";
 import TokenManagement from "./token-management";
 import Vesting from "./vesting";
 import AuctionDetails from "./auction-details";
 import Whitelisting from "./whitelisting";
+
+import { useProjectForm } from "../../data/project-form/useProjectForm";
 
 const steps = [
   "Project Details",
@@ -24,6 +32,22 @@ const steps = [
 ];
 
 export default function HorizontalNonLinearStepper() {
+  const {
+    detailsCompleted,
+    completeDetails,
+    completeTokenManagement,
+    tokenManagementCompleted,
+    completeVesting,
+    vestingCompleted,
+    completeAuctionManagement,
+    auctionManagementCompleted,
+    whitelistingCompleted,
+    completeWhitelisting,
+    createProject,
+    projectCreationState,
+    projectCreationError,
+  } = useProjectForm();
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
 
@@ -40,7 +64,13 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
+    return (
+      detailsCompleted &&
+      tokenManagementCompleted &&
+      vestingCompleted &&
+      auctionManagementCompleted &&
+      whitelistingCompleted
+    );
   };
 
   const handleNext = () => {
@@ -62,10 +92,17 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
+    if (activeStep === 0) {
+      completeDetails() ? handleNext() : null;
+    } else if (activeStep === 1) {
+      completeTokenManagement() ? handleNext() : null;
+    } else if (activeStep === 2) {
+      completeVesting() ? handleNext() : null;
+    } else if (activeStep === 3) {
+      completeAuctionManagement() ? handleNext() : null;
+    } else {
+      completeWhitelisting() ? handleNext() : null;
+    }
   };
 
   const handleReset = () => {
@@ -108,11 +145,19 @@ export default function HorizontalNonLinearStepper() {
     }
   };
 
+  const isCompleted = (index) => {
+    if (index === 0) return detailsCompleted;
+    if (index === 1) return tokenManagementCompleted;
+    if (index === 2) return vestingCompleted;
+    if (index === 3) return auctionManagementCompleted;
+    if (index === 4) return whitelistingCompleted;
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper nonLinear activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
+          <Step key={label} completed={isCompleted(index)}>
             <StepButton color="inherit" onClick={handleStep(index)}>
               {label}
             </StepButton>
@@ -120,7 +165,7 @@ export default function HorizontalNonLinearStepper() {
         ))}
       </Stepper>
       <div>
-        {allStepsCompleted() ? (
+        {false ? (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
@@ -153,25 +198,64 @@ export default function HorizontalNonLinearStepper() {
               <Button onClick={handleNext} sx={{ mr: 1 }}>
                 Next
               </Button>
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "inline-block" }}
+              {
+                /*allStepsCompleted()*/ true ? (
+                  <Button
+                    onClick={() => {
+                      createProject();
+                    }}
                   >
-                    Step {activeStep + 1} already completed
-                  </Typography>
-                ) : (
-                  <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1
-                      ? "Finish"
-                      : "Complete Step"}
+                    Launch Project
                   </Button>
-                ))}
+                ) : (
+                  activeStep !== steps.length &&
+                  (completed[activeStep] ? (
+                    <Typography
+                      variant="caption"
+                      sx={{ display: "inline-block" }}
+                    >
+                      Step {activeStep + 1} already completed
+                    </Typography>
+                  ) : (
+                    <Button onClick={handleComplete}>
+                      {completedSteps() === totalSteps() - 1
+                        ? "Finish"
+                        : "Complete Step"}
+                    </Button>
+                  ))
+                )
+              }
             </Box>
           </React.Fragment>
         )}
       </div>
+      <Dialog open={!!projectCreationState} onClose={() => {}}>
+        <DialogTitle id="alert-dialog-title">Creating your project</DialogTitle>
+        <DialogContent>
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+              width: 400px;
+            `}
+          >
+            <Typography variant="h6">{projectCreationState}</Typography>
+            {projectCreationState !== "Failed" ? <CircularProgress /> : ""}
+          </div>
+          {!!projectCreationError && (
+            <Typography
+              css={(theme) =>
+                css`
+                  color: ${theme.palette.error.main};
+                `
+              }
+              variant="body1"
+            >
+              {projectCreationError}
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

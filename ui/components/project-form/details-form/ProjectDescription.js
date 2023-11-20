@@ -6,12 +6,13 @@ import { TextField, Typography } from "@mui/material";
 import { useProjectForm } from "../../../data/project-form/useProjectForm";
 
 const ProjectDescription = () => {
-  const { projectData, projectActions, submitted } = useProjectForm();
+  const { projectData, projectActions, stepOneSubmitted } = useProjectForm();
 
   const description = projectData.details.description;
   const setDescription = projectActions.details.setDescription;
 
-  const error = submitted & !description ? "Description is required!" : "";
+  const error =
+    stepOneSubmitted && !description ? "Description is required!" : "";
 
   return (
     <div>

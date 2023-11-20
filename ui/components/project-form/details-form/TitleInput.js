@@ -5,12 +5,12 @@ import { TextField, Typography } from "@mui/material";
 
 import { useProjectForm } from "../../../data/project-form/useProjectForm";
 const TitleInput = () => {
-  const { projectData, projectActions, submitted } = useProjectForm();
+  const { projectData, projectActions, stepOneSubmitted } = useProjectForm();
 
   const titleValue = projectData.details.title;
   const setTitle = projectActions.details.setTitle;
 
-  const error = submitted & !titleValue ? "Title is required!" : "";
+  const error = stepOneSubmitted & !titleValue ? "Title is required!" : "";
 
   return (
     <div>

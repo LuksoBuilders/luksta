@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DataProvider } from "./useData";
 
+import LukstaFactoryAbi from "../abis/LukstaFactory.json";
+
 const ExtentionContext = createContext();
 
 export const useExtention = () => {
@@ -12,10 +14,6 @@ export const ExtentionProvider = ({ children }) => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [accounts, setAccounts] = useState([]);
-
-  const [lukstaFactory, setLukstaFactory] = useState();
-
-  useEffect(() => {}, [provider]);
 
   const connectedAccount = accounts[0];
 
@@ -64,9 +62,33 @@ export const ExtentionProvider = ({ children }) => {
 
   const isConnected = !!connectedAccount;
 
+  const getLukstaFactory = async (withSigner = false) => {
+    const lukstaFactoryAddress = "0x79aDcd003088866e15905ddF41a99B9699f20d96";
+    if (withSigner) {
+      await connect();
+      return new ethers.Contract(
+        lukstaFactoryAddress,
+        LukstaFactoryAbi,
+        signer
+      );
+    }
+    return new ethers.Contract(
+      lukstaFactoryAddress,
+      LukstaFactoryAbi,
+      provider
+    );
+  };
+
   return (
     <ExtentionContext.Provider
-      value={{ provider, signer, connect, connectedAccount, isConnected }}
+      value={{
+        provider,
+        signer,
+        connect,
+        connectedAccount,
+        isConnected,
+        getLukstaFactory,
+      }}
     >
       <DataProvider provider={provider}>{children}</DataProvider>
     </ExtentionContext.Provider>

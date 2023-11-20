@@ -7,8 +7,12 @@ import { Percent } from "@mui/icons-material";
 import { useProjectForm } from "../../../data/project-form/useProjectForm";
 
 const TokenDistributions = () => {
-  const { projectData, projectActions, submitted, isDistributionOkay } =
-    useProjectForm();
+  const {
+    projectData,
+    projectActions,
+    tokenManagementSubmitted,
+    isDistributionOkay,
+  } = useProjectForm();
 
   const distribution = projectData.token.distribution;
   const setDistribution = projectActions.token.setDistribution;
