@@ -72,11 +72,13 @@ export const ExtentionProvider = ({ children }) => {
         signer
       );
     }
-    return new ethers.Contract(
-      lukstaFactoryAddress,
-      LukstaFactoryAbi,
-      provider
-    );
+    if (provider) {
+      return new ethers.Contract(
+        lukstaFactoryAddress,
+        LukstaFactoryAbi,
+        provider
+      );
+    }
   };
 
   return (
