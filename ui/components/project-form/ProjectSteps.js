@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogContent,
   CircularProgress,
+  DialogActions,
 } from "@mui/material";
 
 import DetailsForm from "./details-form";
@@ -46,6 +47,7 @@ export default function HorizontalNonLinearStepper() {
     createProject,
     projectCreationState,
     projectCreationError,
+    stopProjectCreation,
   } = useProjectForm();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -56,7 +58,19 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const completedSteps = () => {
-    return Object.keys(completed).length;
+    const completedSteps = [
+      detailsCompleted,
+      tokenManagementCompleted,
+      vestingCompleted,
+      auctionManagementCompleted,
+      whitelistingCompleted,
+    ];
+
+    // Count the number of true values
+    const trueCount = completedSteps.filter((step) => step).length;
+
+    // Return true if at least four steps are completed
+    return trueCount;
   };
 
   const isLastStep = () => {
@@ -92,16 +106,22 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleComplete = () => {
+    const goNextOrNot = () => {
+      console.log(completedSteps() < 4, "are we here?");
+
+      if (completedSteps() < 4) return handleNext();
+    };
+
     if (activeStep === 0) {
-      completeDetails() ? handleNext() : null;
+      completeDetails() ? goNextOrNot() : null;
     } else if (activeStep === 1) {
-      completeTokenManagement() ? handleNext() : null;
+      completeTokenManagement() ? goNextOrNot() : null;
     } else if (activeStep === 2) {
-      completeVesting() ? handleNext() : null;
+      completeVesting() ? goNextOrNot() : null;
     } else if (activeStep === 3) {
-      completeAuctionManagement() ? handleNext() : null;
+      completeAuctionManagement() ? goNextOrNot() : null;
     } else {
-      completeWhitelisting() ? handleNext() : null;
+      completeWhitelisting() ? goNextOrNot() : null;
     }
   };
 
@@ -198,33 +218,31 @@ export default function HorizontalNonLinearStepper() {
               <Button onClick={handleNext} sx={{ mr: 1 }}>
                 Next
               </Button>
-              {
-                /*allStepsCompleted()*/ true ? (
-                  <Button
-                    onClick={() => {
-                      createProject();
-                    }}
+              {allStepsCompleted() ? (
+                <Button
+                  onClick={() => {
+                    createProject();
+                  }}
+                >
+                  Launch Project
+                </Button>
+              ) : (
+                activeStep !== steps.length &&
+                (completed[activeStep] ? (
+                  <Typography
+                    variant="caption"
+                    sx={{ display: "inline-block" }}
                   >
-                    Launch Project
-                  </Button>
+                    Step {activeStep + 1} already completed
+                  </Typography>
                 ) : (
-                  activeStep !== steps.length &&
-                  (completed[activeStep] ? (
-                    <Typography
-                      variant="caption"
-                      sx={{ display: "inline-block" }}
-                    >
-                      Step {activeStep + 1} already completed
-                    </Typography>
-                  ) : (
-                    <Button onClick={handleComplete}>
-                      {completedSteps() === totalSteps() - 1
-                        ? "Finish"
-                        : "Complete Step"}
-                    </Button>
-                  ))
-                )
-              }
+                  <Button onClick={handleComplete}>
+                    {completedSteps() === totalSteps() - 1
+                      ? "Finish"
+                      : "Complete Step"}
+                  </Button>
+                ))
+              )}
             </Box>
           </React.Fragment>
         )}
@@ -255,6 +273,15 @@ export default function HorizontalNonLinearStepper() {
             </Typography>
           )}
         </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              stopProjectCreation();
+            }}
+          >
+            Okay
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

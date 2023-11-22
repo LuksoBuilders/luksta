@@ -144,7 +144,8 @@ describe("Luksta Factory", function () {
         "tst",
         [1000, 2000, 3000, 4000],
         auctionStartTime + 1000,
-        duration
+        duration,
+        [1, 2, 3, 4]
       );
 
       const createdProject = await lukstaFactory.projects(1);

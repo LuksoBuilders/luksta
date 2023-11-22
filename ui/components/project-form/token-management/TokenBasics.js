@@ -2,6 +2,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { TextField, Typography, Grid } from "@mui/material";
+import { ethers } from "ethers";
 
 import { useProjectForm } from "../../../data/project-form/useProjectForm";
 
@@ -19,9 +20,18 @@ const TokenBasics = () => {
       ? "Token Symbol is required!"
       : "";
   const supplyError =
-    tokenManagementSubmitted & (!tokenInfo.supply || isNaN(tokenInfo.supply))
-      ? "Token supply must be a number and is required!"
+    tokenManagementSubmitted &
+    (!tokenInfo.supply ||
+      Number(tokenInfo.supply) === 0 ||
+      isNaN(tokenInfo.supply))
+      ? "Token supply must be a non zero number and is required!"
       : "";
+
+  const distribution = projectData.token.distribution;
+
+  console.log(
+    ethers.utils.parseEther(tokenInfo.supply ? tokenInfo.supply : "0")
+  );
 
   return (
     <div>

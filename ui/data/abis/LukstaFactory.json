@@ -100,6 +100,11 @@
         "internalType": "uint256",
         "name": "auctionDuration_",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint64[4]",
+        "name": "vestingSchedule_",
+        "type": "uint64[4]"
       }
     ],
     "name": "createProject",
@@ -221,6 +226,16 @@
         "internalType": "uint256",
         "name": "auctionId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "foundersVestingWallet",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "investorsVestingWallet",
+        "type": "address"
       }
     ],
     "stateMutability": "view",

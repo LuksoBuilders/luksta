@@ -3,6 +3,7 @@ import localforage from "localforage";
 import moment from "moment";
 import { useExtention } from "../universal-hooks/useExtention";
 import { ethers } from "ethers";
+import { useRouter } from "next/router";
 
 const { LSPFactory } = require("@lukso/lsp-factory.js/build/main/src/index.js");
 const {
@@ -19,6 +20,8 @@ export const useProjectForm = () => {
 };
 
 export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
+  const router = useRouter();
+
   const { provider, signer, getLukstaFactory } = useExtention();
 
   const [draftKey, setDraftKey] = useState("");
@@ -244,6 +247,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
       tokenInfo.name &&
       tokenInfo.supply &&
       !isNaN(Number(tokenInfo.supply)) &&
+      Number(tokenInfo.supply) !== 0 &&
       tokenInfo.symbol &&
       distributationValidator()
     ) {
@@ -359,6 +363,13 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
   const [projectCreationState, setProjectCreationState] = useState("");
   const [projectCreationError, setProjectCreationError] = useState("");
 
+  const stopProjectCreation = () => {
+    if (projectCreationState === "Failed") {
+      setProjectCreationState("");
+      setProjectCreationError("");
+    }
+  };
+
   const createProject = async () => {
     let data;
     setProjectCreationState("Uploading Data");
@@ -403,20 +414,47 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
 
       console.log(lsp3Bytes, signer);
 
-      const lukstaFactory = await getLukstaFactory();
+      const lukstaFactory = await getLukstaFactory(true);
 
       setProjectCreationState("Waiting for transaction approval");
 
+      const getVestingTimes = (duration, cliff) => {
+        if (duration === 0) return [0, 0];
+        const now = moment();
+        const startTime = now.add(cliff, "months");
+        const durationInSeconds = duration * 30.5 * 24 * 3600;
+        const getInSecond = (time) => Math.ceil(Number(time) / 1000);
+        return [getInSecond(startTime), durationInSeconds];
+      };
+
       const projectCreationTx = await lukstaFactory.createProject(
         lsp3Bytes,
-        "qwe",
-        "qwe",
-        [1000, 1000, 1000, 1000],
-        parseInt(Number(new Date()) / 1000) + 20000,
-        7200
+        tokenInfo.name,
+        tokenInfo.symbol,
+        Object.values(distribution).map((dist) => {
+          const totalSupply = ethers.utils.parseEther(tokenInfo.supply);
+          return totalSupply.mul(dist).div(100);
+        }),
+        parseInt(Number(date) / 1000),
+        duration,
+        [
+          ...getVestingTimes(
+            vestingSetting.founderTime,
+            vestingSetting.founderCliff
+          ),
+          ...getVestingTimes(
+            vestingSetting.investorTime,
+            vestingSetting.investorCliff
+          ),
+        ]
       );
 
-      console.log(projectCreationTx);
+      setProjectCreationState("Waiting for transaction confirmation");
+      const receipt = await projectCreationTx.wait();
+      console.log("project creation has been completed", receipt);
+      setProjectCreationState("Project created.");
+      const projectId = await lukstaFactory.projectCounter();
+      router.push(`/projects/${projectId}`);
     } catch (err) {
       console.log(err);
       setProjectCreationState("Failed");
@@ -449,6 +487,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
         projectCreationState,
         projectCreationError,
         createProject,
+        stopProjectCreation,
       }}
     >
       {children}

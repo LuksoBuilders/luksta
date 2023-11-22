@@ -63,7 +63,7 @@ export const ExtentionProvider = ({ children }) => {
   const isConnected = !!connectedAccount;
 
   const getLukstaFactory = async (withSigner = false) => {
-    const lukstaFactoryAddress = "0x79aDcd003088866e15905ddF41a99B9699f20d96";
+    const lukstaFactoryAddress = "0x2A266C43B4561a28f9fB481b4780A41Cc829766A";
     if (withSigner) {
       await connect();
       return new ethers.Contract(

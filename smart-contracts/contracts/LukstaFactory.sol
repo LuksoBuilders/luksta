@@ -14,6 +14,7 @@ import {IUniversalProfile} from "./interfaces/IUniversalProfile.sol";
 import {ILukstaLSP9Vault} from "./interfaces/ILukstaLSP9Vault.sol";
 import {IEasyAuction} from "./interfaces/IEasyAuction.sol";
 import {ILYX} from "./interfaces/ILYX.sol";
+import {ILSP7Vesting} from "./ILSP7Vesting.sol";
 
 contract LukstaFactory is Ownable {
     address public universalProfileBaseContract;
@@ -38,6 +39,8 @@ contract LukstaFactory is Ownable {
         address treasuryVault;
         address projectToken;
         uint256 auctionId;
+        address foundersVestingWallet;
+        address investorsVestingWallet;
     }
 
     mapping(uint256 => Project) public projects;
@@ -94,7 +97,8 @@ contract LukstaFactory is Ownable {
         string memory symbol_,
         uint256[4] memory distributionAmounts_,
         uint256 auctionStartTime_,
-        uint256 auctionDuration_
+        uint256 auctionDuration_,
+        uint64[4] memory vestingSchedule_
     ) public {
         require(auctionStartTime_ > block.timestamp, "can't auction in past");
         require(
@@ -120,6 +124,23 @@ contract LukstaFactory is Ownable {
         project.founderVault = _setupVault(project.universalProfile);
         project.investorsVault = _setupVault(project.universalProfile);
         project.treasuryVault = _setupVault(project.universalProfile);
+
+        if (vestingSchedule_[0] != 0) {
+            project.foundersVestingWallet = Clones.clone(vestingBaseContract);
+            ILSP7Vesting(project.foundersVestingWallet).initialize(
+                project.founderVault,
+                vestingSchedule_[0],
+                vestingSchedule_[1]
+            );
+        }
+        if (vestingSchedule_[2] != 0) {
+            project.investorsVestingWallet = Clones.clone(vestingBaseContract);
+            ILSP7Vesting(project.investorsVestingWallet).initialize(
+                project.investorsVault,
+                vestingSchedule_[2],
+                vestingSchedule_[3]
+            );
+        }
 
         // create token
         project.projectToken = Clones.clone(lukstaLsp7BaseContract);

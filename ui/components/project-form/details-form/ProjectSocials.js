@@ -98,7 +98,6 @@ const ProjectSocials = () => {
           </Grid>
         ))}
       </Grid>
-      <Button onClick={uploadData}>Test</Button>
     </div>
   );
 };
