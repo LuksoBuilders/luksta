@@ -6,7 +6,11 @@ import { useRouter } from "next/router";
 import { useProject } from "../../data/projects/useProject";
 import { Grid } from "@mui/material";
 
-import { BasicInfo, SlideShow } from "../../components/project-details";
+import {
+  BasicInfo,
+  SlideShow,
+  ProjectDescription,
+} from "../../components/project-details";
 
 const ProjectDetails = () => {
   const { query } = useRouter();
@@ -24,6 +28,12 @@ const ProjectDetails = () => {
             `}
           ></div>
           <SlideShow project={project} />
+          <div
+            css={css`
+              margin-top: 2em;
+            `}
+          ></div>
+          <ProjectDescription project={project} />
         </Grid>
         <Grid item lg={3}>
           qwe

@@ -42,9 +42,13 @@ const SlideShow = ({ project }) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       goNext();
     }, 5 * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [currentImageIndex, goNext]);
 
   if (!data) return <div></div>;
