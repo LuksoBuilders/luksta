@@ -1,2 +1,2 @@
 export const ipfsResolver = (ipfsUrl) =>
-  ipfsUrl.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/");
+  ipfsUrl.replace("ipfs://", "https://api.universalprofile.cloud/ipfs/");

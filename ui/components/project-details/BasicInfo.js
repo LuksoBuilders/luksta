@@ -6,7 +6,7 @@ import { ipfsResolver } from "../../data/ipfsResolver";
 
 const BasicInfo = ({ project }) => {
   const { data, loading, error } = project;
-  const showLoading = error || loading;
+  const showLoading = !data;
 
   const profile = data?.profile;
 
@@ -14,8 +14,6 @@ const BasicInfo = ({ project }) => {
   const avatar = profileImage ? profileImage[profileImage.length - 1].url : "";
 
   const auctionDetail = data?.auctionDetail;
-
-  console.log(data);
 
   if (data) {
     return (

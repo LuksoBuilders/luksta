@@ -1,5 +1,4 @@
 import BasicInfo from "./BasicInfo";
+import SlideShow from "./SlideShow";
 
-export {
-    BasicInfo
-}
+export { BasicInfo, SlideShow };

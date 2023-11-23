@@ -58,11 +58,9 @@ export const useProject = (projectId) => {
     { cacheKey, setLoading, setData, setError }
   ) => {
     try {
-      console.log("???");
-
       const lukstaFactory = await getLukstaFactory();
       setLoading(true);
-      const project = await lukstaFactory.projects(projectId);
+      const project = await lukstaFactory.projects(Number(projectId));
       const projectProfile = await getUPData(project.universalProfile);
 
       const profileContract = await getUPContract(project.universalProfile);
@@ -86,11 +84,13 @@ export const useProject = (projectId) => {
       };
       setData(data);
       setLoading(false);
+      setError("");
       await localforage.setItem(cacheKey, {
         data,
         at: new Date(),
       });
     } catch (err) {
+      console.error(err);
       setError(err);
     }
   };
