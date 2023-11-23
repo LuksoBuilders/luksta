@@ -436,7 +436,7 @@ export const ProjectFormProvider = ({ children, initialData, draftingKey }) => {
           return totalSupply.mul(dist).div(100);
         }),
         parseInt(Number(date) / 1000),
-        duration,
+        duration * 3600,
         [
           ...getVestingTimes(
             vestingSetting.founderTime,

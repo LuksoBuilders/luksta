@@ -1,10 +1,42 @@
 import { useEffect, useState } from "react";
 import { useExtention } from "../universal-hooks/useExtention";
 import localforage from "localforage";
+import { gql } from "@apollo/client";
 
+import client from "../apolloClient";
 import { useData } from "../universal-hooks/useData";
 
 const cacheInvalidationTime = 1000 * 5;
+
+const GET_AUCTION = gql`
+  query AuctionDetail($auctionDetailId: ID!) {
+    auctionDetail(id: $auctionDetailId) {
+      id
+      auctionId
+      currentVolume
+      currentClearingPrice
+      currentClearingOrderSellAmount
+      symbolBiddingToken
+      symbolAuctioningToken
+      orderCancellationEndDate
+      startingTimeStamp
+      endTimeTimestamp
+      currentBiddingAmount
+      currentClearingOrderBuyAmount
+      exactOrder {
+        volume
+        userId
+        userAddress
+        timestamp
+        sellAmount
+        price
+        id
+        buyAmount
+        auctionId
+      }
+    }
+  }
+`;
 
 export const useProjects = () => {
   const [datas, setDatas] = useState(new Map());
@@ -50,9 +82,9 @@ export const useProjects = () => {
     setLoadings(nloadings);
   };
 
-  const { getLukstaFactory } = useExtention();
+  const { getLukstaFactory, getUPContract } = useExtention();
 
-  const { getUPData } = useData();
+  const { getUPData, getLSP4Data } = useData();
 
   const cacheKey = `project:{projectId}`;
 
@@ -65,9 +97,25 @@ export const useProjects = () => {
       setLoading(projectId, true);
       const project = await lukstaFactory.projects(projectId);
       const projectProfile = await getUPData(project.universalProfile);
+
+      const profileContract = await getUPContract(project.universalProfile);
+      const owner = await profileContract.owner();
+
+      const auctionData = await client.query({
+        query: GET_AUCTION,
+        variables: {
+          auctionDetailId: Number(project.auctionId),
+        },
+      });
+
+      const { auctionDetail } = auctionData.data;
+
       const data = {
         ...project,
+        projectId,
+        owner,
         profile: projectProfile,
+        auctionDetail,
       };
       setData(projectId, data);
       setLoading(projectId, false);
@@ -142,7 +190,7 @@ export const useProjects = () => {
   }, [getLukstaFactory]);
 
   return {
-    upcoming: projects,
+    upcoming: projects.items,
     fundedProjects: [],
     trendedProjects: [],
   };

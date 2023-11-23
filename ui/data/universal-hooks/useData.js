@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useCallback } from "react";
 import { ethers } from "ethers";
 import LSP3 from "@erc725/erc725.js/schemas/LSP3ProfileMetadata.json";
+import LSP4 from "@erc725/erc725.js/schemas/LSP4DigitalAsset.json";
 import { ERC725 } from "@erc725/erc725.js";
 import Web3 from "web3";
 
@@ -34,9 +35,13 @@ export const DataProvider = ({ provider, children }) => {
   });
 
   const getLSP4Data = useCallback(async (address) => {
-    const erc725 = new ERC725(LSP3, address, erc725Provider, erc725Config);
-    const fetchedData = await erc725.fetchData("LSP4Metadata");
-    return fetchedData;
+    try {
+      const erc725 = new ERC725(LSP4, address, erc725Provider, erc725Config);
+      const fetchedData = await erc725.fetchData("LSP4TokenSymbol");
+      return fetchedData;
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   return (

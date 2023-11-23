@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { DataProvider } from "./useData";
 
 import LukstaFactoryAbi from "../abis/LukstaFactory.json";
+import UniversalProfileAbi from "../abis/UniversalProfile.json";
 
 const ExtentionContext = createContext();
 
@@ -81,6 +82,17 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const getUPContract = async (address, withSigner = false) => {
+    const upAddress = address;
+    if (withSigner) {
+      await connect();
+      return new ethers.Contract(upAddress, UniversalProfileAbi, signer);
+    }
+    if (provider) {
+      return new ethers.Contract(upAddress, UniversalProfileAbi, provider);
+    }
+  };
+
   return (
     <ExtentionContext.Provider
       value={{
@@ -90,6 +102,7 @@ export const ExtentionProvider = ({ children }) => {
         connectedAccount,
         isConnected,
         getLukstaFactory,
+        getUPContract,
       }}
     >
       <DataProvider provider={provider}>{children}</DataProvider>
