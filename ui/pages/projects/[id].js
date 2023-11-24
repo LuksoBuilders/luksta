@@ -10,6 +10,8 @@ import {
   BasicInfo,
   SlideShow,
   ProjectDescription,
+  ProjectLinks,
+  AuctionInfo,
 } from "../../components/project-details";
 
 const ProjectDetails = () => {
@@ -20,7 +22,7 @@ const ProjectDetails = () => {
   return (
     <Layout>
       <Grid container spacing={2}>
-        <Grid item lg={9}>
+        <Grid item lg={8}>
           <BasicInfo project={project} />
           <div
             css={css`
@@ -33,10 +35,16 @@ const ProjectDetails = () => {
               margin-top: 2em;
             `}
           ></div>
+          <ProjectLinks project={project} />
+          <div
+            css={css`
+              margin-top: 2em;
+            `}
+          ></div>
           <ProjectDescription project={project} />
         </Grid>
-        <Grid item lg={3}>
-          qwe
+        <Grid item lg={4}>
+          <AuctionInfo project={project} />
         </Grid>
       </Grid>
     </Layout>
