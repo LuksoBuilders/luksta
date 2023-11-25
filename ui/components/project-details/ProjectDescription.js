@@ -9,8 +9,6 @@ const ProjectDescription = ({ project }) => {
 
   if (!data) return;
 
-  console.log(data);
-
   return (
     <div>
       <Markdown>{data.profile.description}</Markdown>

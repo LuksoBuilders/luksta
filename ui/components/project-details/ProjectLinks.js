@@ -9,15 +9,11 @@ const ProjectLinks = ({ project }) => {
   const { data, error, loading } = project;
   if (!data) return;
 
-  console.log(data, data.profile?.links);
-
   const formattedLinks = data.profile?.links.reduce((pV, cV) => {
     const links = { ...pV };
     links[cV[0]] = cV[1];
     return links;
   }, {});
-
-  console.log(formattedLinks);
 
   return (
     <div>
