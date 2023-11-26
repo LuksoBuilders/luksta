@@ -145,7 +145,7 @@ const PlaceOrder = ({ project }) => {
     >
       <Typography
         css={css`
-          font-size: 28px;
+          font-size: 24px;
         `}
         variant="h6"
       >

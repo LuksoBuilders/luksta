@@ -6,6 +6,7 @@ import AuctionInfo from "./AuctionInfo";
 import AuctionTimer from "./AuctionTimer";
 import CurrentPrice from "./CurrentPrice";
 import PlaceOrder from "./PlaceOrder";
+import OrdersList from "./OrdersList";
 
 export {
   BasicInfo,
@@ -16,4 +17,5 @@ export {
   AuctionTimer,
   CurrentPrice,
   PlaceOrder,
+  OrdersList,
 };

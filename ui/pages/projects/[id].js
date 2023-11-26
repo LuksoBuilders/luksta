@@ -15,6 +15,7 @@ import {
   AuctionTimer,
   CurrentPrice,
   PlaceOrder,
+  OrdersList,
 } from "../../components/project-details";
 
 const ProjectDetails = () => {
@@ -66,6 +67,12 @@ const ProjectDetails = () => {
             `}
           ></div>{" "}
           <PlaceOrder project={project} />
+          <div
+            css={css`
+              margin-top: 1em;
+            `}
+          ></div>{" "}
+          <OrdersList project={project} />
         </Grid>
       </Grid>
     </Layout>
