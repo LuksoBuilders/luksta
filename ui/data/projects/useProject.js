@@ -34,6 +34,17 @@ const GET_AUCTION = gql`
         buyAmount
         auctionId
       }
+      orders {
+        auctionId
+        buyAmount
+        id
+        price
+        sellAmount
+        timestamp
+        volume
+        userId
+        userAddress
+      }
     }
   }
 `;

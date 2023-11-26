@@ -4,6 +4,8 @@ import { DataProvider } from "./useData";
 
 import LukstaFactoryAbi from "../abis/LukstaFactory.json";
 import UniversalProfileAbi from "../abis/UniversalProfile.json";
+import WLYX from "../abis/WLYX.json";
+import DepositAndPlaceOrder from "../abis/DepositAndPlaceOrder.json";
 
 const ExtentionContext = createContext();
 
@@ -15,6 +17,8 @@ export const ExtentionProvider = ({ children }) => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [accounts, setAccounts] = useState([]);
+
+  console.log(accounts);
 
   const connectedAccount = accounts[0];
 
@@ -93,16 +97,50 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const getWLYX = async (withSigner = false) => {
+    const wlyxAddress = "0xBc92DA59222fC799822f92A4D37ccc9B9986187e";
+    if (withSigner) {
+      await connect();
+      return new ethers.Contract(wlyxAddress, WLYX, signer);
+    }
+    if (provider) {
+      return new ethers.Contract(wlyxAddress, WLYX, provider);
+    }
+  };
+
+  const getDepositAndPlaceOrder = async (withSigner = false) => {
+    const depositAndPlaceOrderAddress =
+      "0x1B7B7393fF6D18FDA01e89777b11a7dbAfE59399";
+    if (withSigner) {
+      await connect();
+      return new ethers.Contract(
+        depositAndPlaceOrderAddress,
+        DepositAndPlaceOrder,
+        signer
+      );
+    }
+    if (provider) {
+      return new ethers.Contract(
+        depositAndPlaceOrderAddress,
+        DepositAndPlaceOrder,
+        provider
+      );
+    }
+  };
+
   return (
     <ExtentionContext.Provider
       value={{
         provider,
+        accounts,
         signer,
         connect,
         connectedAccount,
         isConnected,
         getLukstaFactory,
         getUPContract,
+        getWLYX,
+        getDepositAndPlaceOrder,
       }}
     >
       <DataProvider provider={provider}>{children}</DataProvider>
