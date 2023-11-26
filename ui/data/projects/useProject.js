@@ -161,5 +161,17 @@ export const useProject = (projectId) => {
     main();
   }, [getLukstaFactory]);
 
-  return project;
+  const refetch = async () => {
+    await getProject(
+      projectId,
+      {
+        setData,
+        setError,
+        setLoading,
+      },
+      true
+    );
+  };
+
+  return { project, refetch };
 };

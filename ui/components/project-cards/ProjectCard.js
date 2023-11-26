@@ -57,7 +57,7 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
   const backgroundImage = profile?.backgroundImage;
 
   const cover = backgroundImage
-    ? backgroundImage[backgroundImage.length - 2].url
+    ? backgroundImage[backgroundImage.length - 3].url
     : "";
 
   const auctionDetail = data?.auctionDetail;
@@ -433,6 +433,8 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
                 css={css`
                   width: 100%;
                   display: block;
+                  height: 160px;
+                  object-fit: cover;
                 `}
                 src={ipfsResolver(cover)}
               />
@@ -459,7 +461,7 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
       }}
     >
       <Grid container>
-        <Grid md={5}>
+        <Grid item md={5}>
           <div
             css={css`
               padding: 1em;
@@ -480,7 +482,7 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
               : renderAuctionNotStarted()}
           </div>
         </Grid>
-        <Grid md={7}>
+        <Grid item md={7}>
           <div
             css={css`
               padding: 1em;
@@ -507,6 +509,8 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
                   css={css`
                     width: 100%;
                     display: block;
+                    height: 210px;
+                    object-fit: cover;
                   `}
                   src={ipfsResolver(cover)}
                 />

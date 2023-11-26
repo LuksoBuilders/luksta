@@ -35,11 +35,12 @@ export const ExtentionProvider = ({ children }) => {
 
   useEffect(() => {
     const connectProvider = async () => {
-      const web3Provider = window.ethereum
-        ? new ethers.providers.Web3Provider(window.ethereum)
-        : new ethers.providers.JsonRpcProvider(
-            "https://rpc.testnet.lukso.network"
-          );
+      const web3Provider =
+        window.ethereum && window.ethereum.isUniversalProfileExtension
+          ? new ethers.providers.Web3Provider(window.ethereum)
+          : new ethers.providers.JsonRpcProvider(
+              "https://rpc.testnet.lukso.network"
+            );
       setProvider(web3Provider);
       getAccounts(web3Provider);
     };
@@ -49,7 +50,7 @@ export const ExtentionProvider = ({ children }) => {
 
   const connect = async () => {
     try {
-      if (window.ethereum) {
+      if (window.ethereum && window.ethereum.isUniversalProfileExtension) {
         if (!connectedAccount) {
           await provider.send("eth_requestAccounts", []);
         }
@@ -58,6 +59,7 @@ export const ExtentionProvider = ({ children }) => {
         getAccounts(provider);
         setSigner(walletSigner);
       } else {
+        alert("Please install universal profile extension.");
         console.error("No Ethereum provider found");
       }
     } catch (error) {

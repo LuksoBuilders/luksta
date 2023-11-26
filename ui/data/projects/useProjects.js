@@ -65,21 +65,28 @@ export const useProjects = () => {
   };
 
   const setData = (projectId, data) => {
-    const ndatas = new Map([...datas]);
-    ndatas.set(projectId, data);
-    setDatas(ndatas);
+    setDatas((datas) => {
+      const ndatas = new Map([...datas]);
+      ndatas.set(projectId, data);
+      return ndatas;
+    });
   };
 
   const setError = (projectId, error) => {
-    const nerrors = new Map([...errors]);
-    nerrors.set(projectId, error);
-    setErrors(nerrors);
+    setErrors((errors) => {
+      const nerrors = new Map([...errors]);
+      nerrors.set(projectId, error);
+      return nerrors;
+    });
   };
 
   const setLoading = (projectId, loading) => {
-    const nloadings = new Map([...loadings]);
-    nloadings.set(projectId, loading);
-    setLoadings(nloadings);
+    setLoadings((loadings) => {
+      const nloadings = new Map([...loadings]);
+      nloadings.set(projectId, loading);
+
+      return nloadings;
+    });
   };
 
   const { getLukstaFactory, getUPContract } = useExtention();
@@ -92,12 +99,13 @@ export const useProjects = () => {
     projectId,
     { cacheKey, setLoading, setData, setError }
   ) => {
+    console.log("getting project: ", projectId);
     try {
       const lukstaFactory = await getLukstaFactory();
       setLoading(projectId, true);
       const project = await lukstaFactory.projects(projectId);
       const projectProfile = await getUPData(project.universalProfile);
-
+      console.log(`project ${projectId}: `, projectProfile);
       const profileContract = await getUPContract(project.universalProfile);
       const owner = await profileContract.owner();
 
@@ -167,7 +175,6 @@ export const useProjects = () => {
       const lukstaFactory = await getLukstaFactory();
       if (lukstaFactory) {
         const projectsCounts = await lukstaFactory.projectCounter();
-        console.log(Number(projectsCounts));
         setProjectCounts(Number(projectsCounts));
         const projectsArray = Array(Number(projectsCounts))
           .fill(0)
@@ -188,6 +195,8 @@ export const useProjects = () => {
 
     main();
   }, [getLukstaFactory]);
+
+  console.log(projects.items);
 
   return {
     upcoming: projects.items,

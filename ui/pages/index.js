@@ -5,6 +5,7 @@ import Layout from "../components/general/Layout";
 import Hero from "../components/general/Hero";
 import { useProjects } from "../data/projects/useProjects";
 import UpcomingProjects from "../components/project-cards/UpcomingProjects";
+import NewsletterWidget from "../components/general/NewsletterWidget";
 
 export default function Home() {
   const projects = useProjects();
@@ -18,6 +19,12 @@ export default function Home() {
         `}
       ></div>
       <UpcomingProjects projects={projects.upcoming} />
+      <div
+        css={css`
+          margin-top: 3em;
+        `}
+      ></div>
+      <NewsletterWidget />
     </Layout>
   );
 }

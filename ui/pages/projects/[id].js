@@ -21,7 +21,7 @@ import {
 const ProjectDetails = () => {
   const { query } = useRouter();
 
-  const project = useProject(query.id);
+  const { project, refetch } = useProject(query.id);
 
   return (
     <Layout>
@@ -66,7 +66,7 @@ const ProjectDetails = () => {
               margin-top: 1em;
             `}
           ></div>{" "}
-          <PlaceOrder project={project} />
+          <PlaceOrder refetch={refetch} project={project} />
           <div
             css={css`
               margin-top: 1em;

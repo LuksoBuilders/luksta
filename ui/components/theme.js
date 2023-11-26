@@ -17,6 +17,9 @@ const theme = createTheme({
       light: "#DBE2FF",
       dark: "#485BA8",
     },
+    white: {
+      main: "#fff",
+    },
     accentOne: {
       main: "#96EBA4",
       light: "#E3FFE8",

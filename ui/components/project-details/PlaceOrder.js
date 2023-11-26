@@ -82,7 +82,7 @@ const getPreviousOrder = async (params) => {
   }
 };
 
-const PlaceOrder = ({ project }) => {
+const PlaceOrder = ({ project, refetch }) => {
   const [amount, setAmount] = useState("");
   const [maxBiddingPrice, setMaxBiddingPrice] = useState("");
   const [orderStatus, setOrderStatus] = useState("");
@@ -270,6 +270,7 @@ const PlaceOrder = ({ project }) => {
             const receipt = await depositAndPlaceOrderTx.wait();
 
             setOrderStatus("");
+            refetch();
 
             // must refetch
           } catch (err) {
