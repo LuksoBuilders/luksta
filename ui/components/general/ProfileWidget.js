@@ -9,6 +9,16 @@ import { useUP } from "../../data/universal-hooks";
 const ProfileWidget = ({ address }) => {
   const { data, loading } = useUP(address);
 
+  const profileUrl = data.profileImage[4]
+    ? data.profileImage[4].url
+    : data.profileImage[3]
+    ? data.profileImage[3].url
+    : data.profileImage[2]
+    ? data.profileImage[2].url
+    : data.profileImage[1]
+    ? data.profileImage[1].url
+    : "";
+
   return (
     <div
       css={css`
@@ -53,7 +63,7 @@ const ProfileWidget = ({ address }) => {
                 width: 30px;
                 border: 2px solid #f8f8f8;
               `}
-              src={ipfsUrlToNormal(data.profileImage[4].url)}
+              src={ipfsUrlToNormal(profileUrl)}
             />
           </>
         )}
