@@ -41,6 +41,7 @@ contract LukstaFactory is Ownable {
         uint256 auctionId;
         address foundersVestingWallet;
         address investorsVestingWallet;
+        address projectOwner;
     }
 
     mapping(uint256 => Project) public projects;
@@ -107,6 +108,7 @@ contract LukstaFactory is Ownable {
         );
         projectCounter++;
         Project storage project = projects[projectCounter];
+        project.projectOwner = msg.sender;
         project.universalProfile = Clones.clone(universalProfileBaseContract);
         IUniversalProfile(project.universalProfile).initialize(address(this));
         IUniversalProfile(project.universalProfile).setData(

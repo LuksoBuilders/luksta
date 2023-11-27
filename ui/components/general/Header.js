@@ -69,6 +69,9 @@ const Header = () => {
                 css={css`
                   margin-right: 0.5em;
                 `}
+                onClick={() => {
+                  router.push(`/dashboard`);
+                }}
               >
                 Dashboard
               </Button>

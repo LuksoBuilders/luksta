@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import { Grid, Typography } from "@mui/material";
 
 import ProjectCard from "./ProjectCard";
+import { useExtention } from "../../data/universal-hooks";
 
 function shuffleArray(array) {
   // Copy the original array to avoid modifying it directly
@@ -19,7 +20,22 @@ function shuffleArray(array) {
   return shuffledArray;
 }
 
-const UpcomingProjects = ({ projects }) => {
+const MyProjects = ({ projects }) => {
+  const { connectedAccount } = useExtention();
+
+  if (!connectedAccount) {
+    return (
+      <Typography variant="h4">There is no account connected yet</Typography>
+    );
+  }
+
+  console.log(
+    [...projects].filter((proj) => {
+      const project = proj[1];
+      console.log(project.owner);
+    })
+  );
+
   return (
     <div>
       <Typography
@@ -28,43 +44,16 @@ const UpcomingProjects = ({ projects }) => {
         `}
         variant="h4"
       >
-        Featured Projects
+        My Projects
       </Typography>
       <Grid container spacing={2}>
-        {shuffleArray([...projects])
-          .slice(0, 2)
-          .map((project, i) => (
-            <Grid key={i} item md={6}>
-              <ProjectCard project={project} />
-            </Grid>
-          ))}
-      </Grid>
-      <div
-        css={css`
-          margin-top: 2em;
-        `}
-      ></div>
-      <Typography
-        css={css`
-          margin-bottom: 0.5em;
-        `}
-        variant="h4"
-      >
-        All Projects
-      </Typography>
-      <Grid container spacing={2}>
-        {shuffleArray([...projects]).map((project, i) => (
-          <Grid key={i} item md={3}>
-            <ProjectCard
-              size="small"
-              isDraft={true}
-              isOwner
-              project={project}
-            />
+        {[...projects].map((project, i) => (
+          <Grid key={i} item md={6}>
+            <ProjectCard isDraft={true} isOwner project={project} />
           </Grid>
         ))}
       </Grid>
     </div>
   );
 };
-export default UpcomingProjects;
+export default MyProjects;

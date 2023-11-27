@@ -281,7 +281,9 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
             label: "Total Auctioned",
           })}
           {renderInformationRow({
-            info: formatNumber(auctionDetail.currentBiddingAmount),
+            info: `${formatNumber(
+              ethers.utils.formatEther(auctionDetail.currentBiddingAmount)
+            )} $LYX`,
             label: "Total Raised",
           })}
           {renderInformationRow({

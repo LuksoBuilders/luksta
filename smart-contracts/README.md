@@ -8,4 +8,4 @@ UniversalReceiverDelegateVault based contract deployed at: 0x006c3B5B4ee35504a8f
 UniversalProfile based contract deployed at: 0xf5d395519aAa2eAf1361708acB934c3d2c829d13
 Vault based contract deployed at: 0xf02277cC1B66Dda498693C45653838b08df46B2F
 LSP7Vesting based contract deployed at: 0x7A2E4F7aFB1328EeDF4f05aB9F65255514A591cd
-Luksta Factory address is: 0x79aDcd003088866e15905ddF41a99B9699f20d96
+Luksta Factory address is: 0x2A266C43B4561a28f9fB481b4780A41Cc829766A

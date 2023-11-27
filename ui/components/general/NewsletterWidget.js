@@ -47,9 +47,12 @@ const NewsletterWidget = () => {
                   size="small"
                   label="Email Address"
                   color="white"
+                  variant="filled"
                   css={css`
                     border: white !important;
                   `}
+                  name="newsletter-email"
+                  focused
                 />
                 <Button
                   css={(theme) =>
