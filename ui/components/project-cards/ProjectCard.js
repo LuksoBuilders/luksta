@@ -395,7 +395,7 @@ const ProjectCard = ({ project, isOwner, isDraft, size }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={() => {
-          router.push(`/router/${data?.projectId}`);
+          router.push(`/projects/${data?.projectId}`);
         }}
       >
         {renderBasicInfo()}

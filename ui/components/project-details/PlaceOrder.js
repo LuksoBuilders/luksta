@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import { useExtention } from "../../data/universal-hooks/useExtention";
 import { gql } from "@apollo/client";
 import { client } from "../../data/apolloClient";
+import moment from "moment";
 
 export const queueStartElement =
   "0x0000000000000000000000000000000000000000000000000000000000000001";
@@ -136,6 +137,48 @@ const PlaceOrder = ({ project, refetch }) => {
 
   const canOrder =
     signer && amount && maxBiddingPrice && !isMoreThanBalance && !orderStatus;
+
+  const endTime = new Date(parseInt(auctionData.endTimeTimestamp) * 1000);
+
+  const isAuctionFinished = moment().isAfter(endTime);
+
+  if (isAuctionFinished) {
+    return (
+      <Paper
+        css={css`
+          padding: 1em;
+        `}
+      >
+        <Typography
+          css={css`
+            font-size: 24px;
+          `}
+          variant="h6"
+        >
+          Settle the auction
+        </Typography>
+        <Typography
+          css={css`
+            margin-top: 1em;
+          `}
+          variant="body1"
+        >
+          Order placing time for this auction is finished. You can now settle
+          the auction.
+        </Typography>
+        <Button
+          css={css`
+            margin-top: 1em;
+          `}
+          fullWidth
+          variant="outlined"
+          color="secondary"
+        >
+          Settle Auction
+        </Button>
+      </Paper>
+    );
+  }
 
   return (
     <Paper
